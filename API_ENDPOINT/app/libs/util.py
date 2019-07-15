@@ -61,6 +61,15 @@ def collect_yaml_resource(folder):
     files_all = [f for f in listdir if isfile(join(folder, f))]
     return files_all
 
+def get_config(conf_nm):
+    f_name = conf_nm+'.yaml'
+    root = get_conf_path()
+    f_path = "{}/{}".format(root,f_name)
+    try:
+        data=load_yaml(f_path)
+    except Exception as e:
+        data = str(e)
+    return data
 
 def get_command(req):
     command = req.split("/")
@@ -77,3 +86,55 @@ def field_cleanup(data):
         if val:
             d[key] = val
     return d
+
+def remove_config(filename):
+    filename = filename+'.yaml'
+    root = get_conf_path()
+    filepath = "{}/{}".format(root,filename)
+    check = check_exist(filepath)
+    if not check:
+        return True
+    else:
+        try:
+            os.remove(filepath)
+        except Exception as e:
+            print(str(e))
+            return False
+        else:
+            return True
+
+def get_conf_path():
+    root = os.getcwd()
+    root = os.path.abspath(root+'/..')
+    dir_ = root + '/conf'
+    return dir_
+def dump_file(filename,data):
+    dir_ = get_conf_path()
+    check_1 = os.path.exists(dir_)
+    check_2 = os.path.isdir(dir_)
+    check_value = check_1 and check_2
+    file_path = dir_+'/'+filename
+    if check_value:
+        with open(file_path,'w+') as f:
+            try:    
+                yaml.dump(data,stream=f,default_flow_style=False)
+                return True
+            except yaml.YAMLError as e:
+                print(str(e))
+                return False
+    else:
+        os.mkdir(dir_)
+        dump_file(file_path,data)
+
+def flatten_dictionaries(input_):
+    output = dict()
+    try:
+        if isinstance(input_, list):
+            for map_ in input_:
+                output.update(map_)
+        else:  # Not a list of dictionaries
+            output = input_
+    except Exception as e:
+        return False
+    else:
+        return output

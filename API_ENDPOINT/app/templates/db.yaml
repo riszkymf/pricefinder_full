@@ -421,4 +421,36 @@ endpoint:
         id_hosting:
           name: fields_name
           default: 
-        
+  dt_config:
+    insert:
+      fields:
+        conf_nm:
+          name: company name
+          type: fields
+          default:
+        conf_data:
+          name: company url
+          type: fields
+        date_time:
+          name: company url
+          type: fields
+      tags:
+          id_conf:
+          name: primary key database
+          type: tags
+          default: func:get_tag
+    where:
+      tags:
+        id_conf:
+          name: primary key database
+          type: tags
+          default:
+        nm_conf:
+          name: company name
+          type: tags
+          default:
+    remove:
+      tags:
+        id_conf:
+          name: primary key database
+          type: int 

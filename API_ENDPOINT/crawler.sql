@@ -22,6 +22,7 @@ CREATE TABLE dt_company_product(
     id_product INT NULL,
     id_company INT NULL,
     id_worker INT NULL,
+    id_conf INT NULL,
     nm_company_product STRING(200) NULL,
     status_page STRING(200) NULL,
     status_scraper STRING(200) NULL,
@@ -30,6 +31,7 @@ CREATE TABLE dt_company_product(
     INDEX product_auto_index_fk_id_product_ref_product (id_product ASC),
     INDEX company_auto_index_fk_id_company_ref_company (id_company ASC),
     INDEX worker_auto_index_fk_id_worker_ref_worker (id_worker ASC),
+    INDEX conf_auto_index_fk_id_conf_ref_conf (id_conf ASC),
     FAMILY "primary" (id_company_product, id_product, id_company, id_worker,status_page,status_scraper)
 );
 
@@ -96,11 +98,18 @@ CREATE TABLE dt_hosting(
     FAMILY "primary" (id_hosting, id_company_product, spec_price, spec_storage, spec_database, spec_free_domain, spec_hosting_domain, spec_subdomain, spec_ftp_user, spec_control_panel, spec_email_account, spec_spam_filter, date_time)
 );
 
-
+CREATE TABLE dt_config(
+    id_conf INT NOT NULL DEFAULT unique_rowid(),
+    conf_nm STRING(200) NULL,
+    date_time STRING(200) NULL,
+    CONSTRAINT dt_hosting PRIMARY KEY (id_conf ASC),
+    FAMILY "primary" (id_conf)
+);
 
 ALTER TABLE dt_company_product ADD CONSTRAINT product_auto_index_fk_id_product_ref_product FOREIGN KEY (id_product) REFERENCES dt_product (id_product) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE dt_company_product ADD CONSTRAINT company_auto_index_fk_id_company_ref_company FOREIGN KEY (id_company) REFERENCES dt_company (id_company) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE dt_company_product ADD CONSTRAINT worker_auto_index_fk_id_worker_ref_worker FOREIGN KEY (id_worker) REFERENCES dt_worker (id_worker) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE dt_company_product ADD CONSTRAINT conf_auto_index_fk_id_conf_ref_conf FOREIGN KEY (id_conf) REFERENCES dt_config(id_conf) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE dt_vm ADD CONSTRAINT company_product_auto_index_fk_id_company_product_ref_company_product FOREIGN KEY (id_company_product) REFERENCES dt_company_product (id_company_product) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE dt_additional_features ADD CONSTRAINT company_product_auto_index_fk_id_company_product_ref_company_product FOREIGN KEY (id_company_product) REFERENCES dt_company_product(id_company_product) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE dt_hosting ADD CONSTRAINT company_product_auto_index_fk_id_company_product_ref_company_product FOREIGN KEY (id_company_product) REFERENCES dt_company_product (id_company_product) ON DELETE CASCADE ON UPDATE CASCADE;

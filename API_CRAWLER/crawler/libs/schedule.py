@@ -1,0 +1,8 @@
+
+
+
+
+
+
+class CrawlerConfig(object):
+    pass

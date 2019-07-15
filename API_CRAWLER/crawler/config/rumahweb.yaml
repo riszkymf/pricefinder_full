@@ -1,0 +1,124 @@
+- config:
+  - name: Rumah Web
+  - base_url: "https://www.rumahweb.com/"
+  - currency_used: "IDR"
+- product:
+  - name: personal_hosting
+  - endpoint: 'hosting-murah/#personal'
+  - type: hosting
+  - data_display: card
+  - skip_first_data: true
+  - dump_to_database: True
+  - action_chains:
+      - change_tab:
+          - move_to_element:
+              - to_element:
+                  - xpath: '//a[@href="#personal"]'
+          - click:
+              - on_element:
+                  - xpath: '//a[@href="#personal"]'
+  - content:
+      - pricing:
+          - spec_price:
+              - extractor:
+                  - xpath: '//div[@id="personal"]/div[@class="row"]/div[*]//p[contains(@class,"-annually")]/span/strong'
+              - postprocess:
+                  - extract_convert_float:
+                  - math: {operator: '*', y: '12'}
+          - spec_storage:
+              - extractor:
+                  - xpath: '//*[@id="personal"]/div/div[*]/div/ul/li[1]/strong'
+          - spec_email_account:
+              - extractor:
+                  - xpath: '//*[@id="personal"]/div/div[*]/div/ul/li[3]/strong'
+          - spec_free_domain:
+              - extractor:
+                  - xpath: '//*[@id="personal"]/div/div[*]/div/ul/li[4]/strong'
+          - spec_database:
+              - extractor:
+                  - xpath: '//*[@id="personal"]/div/div[*]/div/ul/li[5]/strong'
+      - additional_features:
+          - traffic:
+              - extractor:
+                  - xpath: '//*[@id="personal"]/div/div[*]/div/ul/li[2]/strong'
+- product:
+  - name: profesional_hosting
+  - endpoint: 'hosting-murah/#profesional'
+  - type: hosting
+  - data_display: card
+  - skip_first_data: true
+  - dump_to_database: True
+  - action_chains:
+      - change_tab:
+          - move_to_element:
+              - to_element:
+                  - xpath: '//a[@href="#profesional"]'
+          - click:
+              - on_element:
+                  - xpath: '//a[@href="#profesional"]'
+  - content:
+      - pricing:
+          - spec_price:
+              - extractor:
+                  - xpath: '//*[@id="profesional"]/div/div[*]/div/p[7]/span/strong'
+              - postprocess:
+                  - extract_convert_float:
+                  - math: {operator: '*', y: '12'}
+          - spec_storage:
+              - extractor:
+                  - xpath: '//*[@id="profesional"]/div/div[*]/div/ul/li[1]/strong'
+          - spec_email_account:
+              - extractor:
+                  - xpath: '//*[@id="profesional"]/div/div[*]/div/ul/li[3]/strong'
+          - spec_free_domain:
+              - extractor:
+                  - xpath: '//*[@id="profesional"]/div/div[*]/div/ul/li[4]/strong'
+          - spec_database:
+              - extractor:
+                  - xpath: '//*[@id="profesional"]/div/div[*]/div/ul/li[5]/strong'
+      - additional_features:
+          - traffic:
+              - extractor:
+                  - xpath: '//*[@id="profesional"]/div/div[*]/div/ul/li[2]/strong'
+          - web_builder:
+              - extractor:
+                  - xpath: '//*[@id="profesional"]/div/div[*]/div/ul/li[7]/strong'
+- product:
+  - name: enterprise_hosting
+  - endpoint: 'hosting-murah/#enterprise'
+  - type: hosting
+  - data_display: card
+  - skip_first_data: true
+  - dump_to_database: False
+  - action_chains:
+      - change_tab:
+          - move_to_element:
+              - to_element:
+                  - xpath: '//a[@href="#enterprise"]'
+          - click:
+              - on_element:
+                  - xpath: '//a[@href="#enterprise"]'
+  - content:
+      - pricing:
+          - spec_price:
+              - extractor:
+                  - xpath: '//*[@id="enterprise"]/div/div[*]/div/p[7]/span/strong'
+              - postprocess:
+                  - extract_convert_float:
+                  - math: {operator: '*', y: '12'}
+          - spec_storage:
+              - extractor:
+                  - xpath: '//*[@id="enterprise"]/div/div[*]/div/ul/li[1]/strong'
+          - spec_email_account:
+              - extractor:
+                  - xpath: '//*[@id="enterprise"]/div/div[*]/div/ul/li[3]/strong'
+          - spec_free_domain:
+              - extractor:
+                  - xpath: '//*[@id="enterprise"]/div/div[*]/div/ul/li[4]/strong'
+          - spec_database:
+              - extractor:
+                  - xpath: '//*[@id="enterprise"]/div/div[*]/div/ul/li[5]/strong'
+      - additional_features:
+          - web_builder:
+              - extractor:
+                  - xpath: '//*[@id="enterprise"]/div/div[*]/div/ul/li[7]/strong'

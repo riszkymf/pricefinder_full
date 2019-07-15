@@ -1,3 +1,7 @@
+<<<<<<< HEAD
+
+=======
+>>>>>>> e9fd29d26df657690c7260f9f167ec62218e22f3
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -102,3 +106,18 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+.vscode
+/data
+samplepage.html
+*.ipynb
+.ipynb_checkpoints
+ipynb
+
+
+/env
+.ipynb_checkpoints
+*/__pycache__/*
+__pycache__/*
+
+/conf

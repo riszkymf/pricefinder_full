@@ -1,0 +1,721 @@
+{
+	"info": {
+		"_postman_id": "941fc174-51d7-474e-b3b0-89efc300d8b0",
+		"name": "WEB SCRAPER TEST",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "GET COMPANY",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{remote}}/api/company",
+					"host": [
+						"{{remote}}"
+					],
+					"path": [
+						"api",
+						"company"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "INSERT COMPANY",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"insert\": {\n        \"fields\": {\n                    \"nm_company\": \"linode\",\n                    \"url_company\": \"linode.com\",\n                    \"currency_used\": \"USD\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{remote}}/api/company",
+					"host": [
+						"{{remote}}"
+					],
+					"path": [
+						"api",
+						"company"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "WHERE COMPANY",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"where\": {\n        \"tags\": {\n            \"nm_company\": \"qwords\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{remote}}/api/company",
+					"host": [
+						"{{remote}}"
+					],
+					"path": [
+						"api",
+						"company"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "REMOVE COMPANY",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"remove\": {\n        \"tags\": {\n            \"id_company\": \"qwords\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{remote}}/api/company",
+					"host": [
+						"{{remote}}"
+					],
+					"path": [
+						"api",
+						"company"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET PRODUCT",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{remote}}/api/product",
+					"host": [
+						"{{remote}}"
+					],
+					"path": [
+						"api",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "INSERT PRODUCT",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"insert\": {\n        \"fields\": {\n            \"nm_product\": \"test\",\n            \"nm_databaseref\": \"test\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{remote}}/api/product",
+					"host": [
+						"{{remote}}"
+					],
+					"path": [
+						"api",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "WHERE PRODUCT",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"where\": {\n        \"tags\": {\n            \"id_product\": \"402140280385142785\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{remote}}/api/product",
+					"host": [
+						"{{remote}}"
+					],
+					"path": [
+						"api",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "REMOVE PRODUCT",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"remove\": {\n        \"tags\": {\n\t\t\t\"id_product\": \"461842271422611457\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{remote}}/api/product",
+					"host": [
+						"{{remote}}"
+					],
+					"path": [
+						"api",
+						"product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET COMPANY PRODUCT",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{domain}}/api/company_product",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"company_product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "INSERT COMPANY PRODUCT",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"insert\": {\n        \"fields\": {\n\t        \"nm_company_product\": \"hosting_test\",\n\t        \"id_company\": \"461635893004402689\",\n\t        \"id_product\": \"402393625286410241\",\n\t        \"id_worker\": \"402140815780249601\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/company_product",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"company_product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "WHERE COMPANY PRODUCT",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"where\": {\n        \"tags\": {\n\t        \"id_company_product\": \"461588535418388481\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/company_product",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"company_product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "REMOVE COMPANY PRODUCT",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"remove\": {\n        \"tags\": {\n\t        \"id_company_product\": \"461860121287852033\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/company_product",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"company_product"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET VM",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{domain}}/api/vm",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"vm"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "INSERT VM",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"insert\": {\n        \"fields\": {\n            \"id_company_product\": \"461860121287852033\",\n            \"spec_vcpu\": \"None\",\n            \"spec_clock\": \"None\",\n            \"spec_ram\": \"None\",\n            \"spec_os\": \"None\",\n            \"spec_storage_volume\": \"None\",\n            \"spec_ssd_volume\": \"None\",\n            \"spec_snapshot_volume\": \"None\",\n            \"spec_template_volume\": \"None\",\n            \"spec_iso_volume\": \"None\",\n            \"spec_public_ip\": \"None\",\n            \"spec_backup_storage\": \"None\",\n            \"spec_price\": \"NONE\",\n            \"spec_notes\": \"NONE\",\n            \"date_time\": \"20190618\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/vm",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"vm"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "WHERE VM",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"where\": {\n        \"tags\": {\n            \"id_vm\": \"461588544038731777\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/vm",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"vm"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "REMOVE VM",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"remove\": {\n        \"tags\": {\n            \"id_vm\": \"461860121287852033\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/vm",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"vm"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "VIEW VM",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"view\": {\n        \"tags\": {\n            \"id_vm\": \"\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/vm",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"vm"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET HOSTING",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{remote}}/api/additional_features",
+					"host": [
+						"{{remote}}"
+					],
+					"path": [
+						"api",
+						"additional_features"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "INSERT HOSTING",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"insert\": {\n        \"fields\": {\n        \"id_company_product\": \"461832159101353985\",\n        \"spec_price\": \"None\",\n        \"spec_storage\": \"None\",\n        \"spec_database\": \"None\",\n        \"spec_free_domain\": \"None\",\n        \"spec_hosting_domain\": \"None\",\n        \"spec_subdomain\": \"None\",\n        \"spec_ftp_user\": \"None\",\n        \"spec_control_panel\": \"None\",\n        \"spec_email_account\": \"None\",\n        \"spec_spam_filter\": \"None\",\n        \"date_time\": \"20190618\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/hosting",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"hosting"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "WHERE HOSTING",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"where\": {\n        \"tags\": {\n            \"id_company_product\": \"461832159101353985\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/hosting",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"hosting"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "REMOVE HOSTING",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"remove\": {\n        \"tags\": {\n            \"id_hosting\": \"461832159319523329\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/hosting",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"hosting"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "VIEW HOSTING",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"view\": {\n        \"tags\": {\n            \"id_hosting\": \"\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/hosting",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"hosting"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GET ADDITIONAL FEATURES",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{remote}}/api/additional_features",
+					"host": [
+						"{{remote}}"
+					],
+					"path": [
+						"api",
+						"additional_features"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "INSERT ADDITIONAL FEATURES",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"insert\": {\n        \"fields\": {\n        \"id_company_product\": \"461832159101353985\",\n        \"spec_features\": \"None\",\n        \"spec_features_price\": \"None\",\n        \"spec_features_value\": \"None\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/additional_features",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"additional_features"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "REMOVE ADDITIONAL FEATURES",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"remove\": {\n        \"tags\": {\n        \t\"id_additional_features\": \"461832159101353985\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/additional_features",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"additional_features"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "WHERE ADDITIONAL FEATURES",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"where\": {\n        \"tags\": {\n        \t\"id_company_product\": \"461832132045504513\"\n        }\n    }\n}"
+				},
+				"url": {
+					"raw": "{{domain}}/api/additional_features",
+					"host": [
+						"{{domain}}"
+					],
+					"path": [
+						"api",
+						"additional_features"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

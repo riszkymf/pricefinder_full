@@ -1,0 +1,456 @@
+version: v.0.0.1
+
+endpoint:
+  dt_company:
+    insert:
+      fields:
+        nm_company:
+          name: company name
+          type: fields
+          default:
+        url_company:
+          name: company url
+          type: fields
+          default:
+        currency_used:
+          name: currency
+          type: fields
+          default:
+      tags:
+          id_company:
+          name: primary key database
+          type: tags
+          default: func:get_tag
+    where:
+      tags:
+        id_company:
+          name: primary key database
+          type: tags
+          default:
+        nm_company:
+          name: company name
+          type: tags
+          default:
+    remove:
+      tags:
+        id_company:
+          name: primary key database
+          type: int    
+  dt_product:
+    insert:
+      fields:
+        nm_product:
+          name: product name
+          type: fields
+          default:
+        nm_databaseref:
+          name: Database reference
+          type: fields
+      tags:
+        id_product:
+          name: primary key
+          default: func:get_tag
+    where:
+      tags:
+        id_product:
+          name: primary key
+          type: tags
+          default:
+        nm_product:
+          name: product name
+          type: tags
+          default:
+    remove:
+      tags:
+        id_product:
+          name: primary key
+          type: tags
+  dt_company_product:
+    insert:
+      fields:
+        id_product:
+          name: foreign key
+          type: fields
+          default:
+        id_company:
+          name: foreign key
+          type: fields
+          default:
+        nm_company_product:
+          name: product name
+          type: fields
+          default:
+        id_worker:
+          name: worker reference
+          type: fields
+          default:
+      tags:
+        id_company_product:
+          name: primary key
+          type: tags
+          default: func:get_tag
+    where:
+      tags:
+        id_company_product:
+          name: primary key
+          type: tags
+          default:
+        id_product:
+          name: foreign key
+          type: tags
+          default:
+        id_company:
+          name: foreign key
+          type: tags
+          default:
+        nm_company_product:
+          name: product name
+          type: tags
+          default:
+        id_worker:
+          name: worker reference
+          type: tags
+          default:
+    remove:
+      tags:
+        id_company_product:
+          name: primary key
+          type: int
+    update:
+      tags:
+        id_company_product:
+          name: primary key
+          type: int
+          default:
+      fields:
+        id_company_product:
+          name: primary key
+          type: int
+          default:
+        id_product:
+          name: foreign key
+          type: int
+          default:
+        id_company:
+          name: foreign key
+          type: int
+          default:
+        nm_product:
+          name: product name
+          type: str
+          default:
+        id_worker:
+          name: worker reference
+          type: int
+          default:
+        status_page:
+          name: data
+          type: field
+          default:
+        status_scraper:
+          name: data
+          type: field
+          default:
+  dt_vm:
+    insert:
+      fields:
+        spec_vcpu:
+          name: vCPU in Core
+          type: fields
+          default:
+        spec_clock:
+          name: Clock in GHz
+          type: fields
+          default:
+        spec_ram:
+          name: RAM
+          type: fields
+          default:
+        spec_os:
+          name: OS_TYPE
+          type: fields
+          default:
+        spec_storage_volume:
+          name: Storage Data in GB
+          type: fields
+          default:
+        spec_ssd_volume:
+          name: SSD Storage in GB
+          type: fields
+          default:
+        spec_snapshot_volume:
+          name: Snapshot Storage in GB
+          type: fields
+          default:
+        spec_template_volume:
+          name: Template Storage in GB
+          type: fields
+          default:
+        spec_iso_volume:
+          name: ISO Volume in GB
+          type: fields
+          default:
+        spec_public_ip:
+          name: Public IP Available
+          type: fields
+          default:
+        spec_backup_storage:
+          name: Backup Storage Available
+          type: fields
+          default:
+        spec_price :
+          name: Price in Rp/Month
+          type: fields
+        spec_notes:
+          name: note
+          type: fields
+          default:
+        id_company_product:
+          name: fk_dt_company_product
+          type: fields
+        date_time:
+          name: date
+          type: fields
+          default: 
+      tags:
+        id_vm:
+          name: primary_key
+          type: int
+          default: func:get_tag
+    where:
+      tags:
+        id_vm:
+          name: primary_key
+          type: tags
+          default:
+        spec_vcpu:
+          name: vCPU in Core
+          type: tags
+          default:
+        spec_clock:
+          name: Clock in GHz
+          type: tags
+          default:
+        spec_ram:
+          name: RAM
+          type: tags
+          default:
+        spec_os:
+          name: OS_TYPE
+          type: tags
+          default:
+        spec_storage_volume:
+          name: Storage Data in GB
+          type: tags
+          default:
+        spec_ssd_volume:
+          name: SSD Storage in GB
+          type: tags
+          default:
+        spec_snapshot_volume:
+          name: Snapshot Storage in GB
+          type: tags
+          default:
+        spec_template_volume:
+          name: Template Storage in GB
+          type: tags
+          default:
+        spec_iso_volume:
+          name: ISO Volume in GB
+          type: tags
+          default:
+        spec_public_ip:
+          name: Public IP Available
+          type: tags
+          default:
+        spec_backup_storage:
+          name: Backup Storage Available
+          type: tags
+          default:
+        spec_price :
+          name: Price in Rp/Month
+          type: tags
+          default:
+        spec_notes:
+          name: note
+          type: tags
+          default:
+        id_company_product:
+          name: fk_dt_company_product
+          type: tags
+          default:
+    remove:
+      tags:
+        id_vm:
+          name: primary_key
+          type: tags
+    view:
+      tags:
+        id_vm:
+          name: field name
+          type: tags
+          default: 
+  dt_worker:
+    insert:
+      fields:
+        loc_schedule_config:
+          name: schedule configuration location
+          type: fields
+        loc_config:
+          name: worker config location
+          type: fields
+      tags:
+        id_worker:
+          name: primary key
+          default: func:get_tag
+  dt_additional_features:
+    insert:
+      fields:
+        id_company_product:
+          name: company_product
+          type: fields
+        spec_features:
+          name: field name
+          type: fields
+          default:
+        spec_features_value:
+          name: field name
+          type: fields
+          default:
+        spec_features_price:
+          name: field name
+          type: fields
+          default:
+      tags:
+        id_additional_features:
+          name: tag_name
+          default: func:get_tag
+    where:
+      tags:
+        id_company_product:
+          name: company_product
+          type: tags
+          default:
+        spec_features:
+          name: field name
+          type: tags
+          default:
+        spec_features_price:
+          name: field name
+          type: tags
+          default:
+        spec_features_value:
+          name: field name
+          type: tags
+          default:
+        id_additional_features:
+          name: tag_name
+          type: tags
+          default:
+    remove:
+      tags:
+        id_additional_features:
+          name: tag_name
+          type: tags
+  dt_hosting:
+    insert:
+      fields:
+        id_company_product:
+          name: field_name
+          type: fields
+        spec_price:
+          name: field_name
+          type: fields
+        spec_storage:
+          name: fields_name
+          type: fields
+          default:
+        spec_database:
+          name: fields_name
+          type: fields
+          default:
+        spec_free_domain:
+          name: fields_name
+          type: fields
+          default:        
+        spec_hosting_domain:
+          name: fields_name
+          type: fields
+          default:
+        spec_subdomain:
+          name: fields_name
+          type: fields
+          default:
+        spec_ftp_user:
+          name: fields_name
+          type: fields
+          default:
+        spec_control_panel:
+          name: fields_name
+          type: fields
+          default:
+        spec_email_account:
+          name: fields_name
+          type: fields
+          default:
+        spec_spam_filter:
+          name: fields_name
+          type: fields
+          default:            
+        date_time:
+          name: fields_name
+          type: fields
+          default:           
+      tags:
+        id_hosting:
+          name: fields_name
+          default: func:get_tag
+    where:
+      tags:
+        id_hosting:
+          name: fields_name
+          default: 
+        date_time:
+          name: fields_name
+          default: 
+        id_company_product:
+          name: fields_name
+          default:
+    view:
+      tags:
+        id_hosting:
+          name: fields_name
+          default: 
+  dt_config:
+    insert:
+      fields:
+        conf_nm:
+          name: company name
+          type: fields
+          default:
+        conf_data:
+          name: company url
+          type: fields
+        date_time:
+          name: company url
+          type: fields
+      tags:
+          id_conf:
+          name: primary key database
+          type: tags
+          default: func:get_tag
+    where:
+      tags:
+        id_conf:
+          name: primary key database
+          type: tags
+          default:
+        nm_conf:
+          name: company name
+          type: tags
+          default:
+    remove:
+      tags:
+        id_conf:
+          name: primary key database
+          type: int 

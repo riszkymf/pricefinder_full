@@ -2,6 +2,7 @@ import requests
 from crawler.settings import *
 import json
 import copy
+from crawler.libs.util import get_time
 
 def post_requests(endpoint,data,headers=None):
     endpoint = endpoint.lstrip("/")
@@ -307,3 +308,15 @@ def update_scraper_status(status,nm_company_product=None):
         return res
     except Exception:
         return None
+
+def send_conf_data(conf_data,conf_name):
+    endpoint = 'api/config'
+    date_time = get_time()
+    send_data = {
+        "conf_nm": conf_name,
+        "conf_data": conf_data,
+        "date_time": date_time
+    }
+    send_data = build_json("insert",send_data)
+    res = post_requests(endpoint,send_data)
+    return res

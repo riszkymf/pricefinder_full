@@ -1,0 +1,52 @@
+- config:
+  - name: Linode
+  - base_url: "https://www.linode.com/"
+  - currency: "USD"
+- product:
+  - name: cloud_server
+  - endpoint: 'pricing'
+  - type: vm
+  - data_display: card
+  - skip_first_data: True
+  - action_chains:
+      - open_up:
+          - move_to_element:
+              - to_element:
+                  - xpath: //*[@id="show-larger-plans"]
+              - move_to_window_center: True
+          - click:
+              - on_element:
+                  - xpath: //*[@id="show-larger-plans"]
+              - move_to_window_center: True
+  - content:
+      - pricing:
+          - spec_price:
+              - extractor:
+                  - xpath: //*[@id="pricing-larger-plans"]//tr[*]/td[8]/strong
+              - postprocess:
+                  - extract_numbers:
+                  - math: {'operator': '*', y: 12}
+          - spec_ram:
+              - extractor:
+                  - xpath: //*[@id="pricing-larger-plans"]//tr[*]/td[2]
+              - postprocess:
+                  - extract_numbers:
+          - spec_vcpu:
+              - extractor:
+                  - xpath: //*[@id="pricing-larger-plans"]//tr[*]/td[3]
+          - spec_ssd_volume:
+              - extractor:
+                  - xpath: //*[@id="pricing-larger-plans"]//tr[*]/td[4]
+              - postprocess:
+                  - remove_strings: " SSD"
+      - additional_features:
+          - transfer:
+              - extractor:
+                  - xpath: //*[@id="pricing-larger-plans"]//tr[*]/td[5]
+          - network_in:
+              - extractor:
+                  - xpath: //*[@id="pricing-larger-plans"]//tr[*]/td[6]
+          - network_out:
+              - extractor:
+                  - xpath: //*[@id="pricing-larger-plans"]//tr[*]/td[7]
+    

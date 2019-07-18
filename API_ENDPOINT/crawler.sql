@@ -39,6 +39,7 @@ CREATE TABLE dt_worker(
     id_worker INT NOT NULL DEFAULT unique_rowid(),
     loc_schedule_config STRING(200) NULL,
     loc_config STRING(200) NULL,
+    status_worker STRING(200) NULL,
     CONSTRAINT "primary" PRIMARY KEY (id_worker ASC),
     UNIQUE INDEX worker_loc_schedule_config (loc_schedule_config ASC),
     UNIQUE INDEX worker_loc_config (loc_config ASC),

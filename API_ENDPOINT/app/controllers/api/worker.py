@@ -106,3 +106,27 @@ class WorkerDetails(Resource):
                 }
             finally:
                 return response(200, data=obj_userdata , message=respons)
+        if init_data['action'] == 'update':
+            table = ""
+            tags = dict()
+            fields = ""
+            for i in init_data['data']:
+                table = i['table']
+                tags = i['tags']
+                fields = i['fields']
+            fields = utils.field_cleanup(fields)
+            try:
+                result = model.update(table,tags, fields)
+            except Exception as e:
+                respons = {
+                    "status": False,
+                    "error": str(e)
+                }
+            else:
+                respons = {
+                    "status": True,
+                    "messages": "Success",
+                    "id": result
+                }
+            finally:
+                return response(200, data=fields , message=respons)

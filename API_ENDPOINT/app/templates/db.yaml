@@ -299,10 +299,39 @@ endpoint:
         loc_config:
           name: worker config location
           type: fields
+        status_worker:
+          name: worker status
+          type: fields
       tags:
         id_worker:
           name: primary key
           default: func:get_tag
+    remove:
+      tags:
+        id_worker:
+          name: primary key
+          type: tags
+    where:
+      tags:
+        id_worker:
+          name: primary key
+          type: tags
+    update:
+      tags:
+        id_worker:
+          name: primary key
+      fields:
+        status_worker:
+          name: worker status
+          type: fields
+        loc_schedule_config:
+          name: schedule configuration location
+          type: fields
+          default:
+        loc_config:
+          name: worker config location
+          type: fields
+          default:
   dt_additional_features:
     insert:
       fields:

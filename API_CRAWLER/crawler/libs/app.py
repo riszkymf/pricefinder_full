@@ -320,3 +320,18 @@ def send_conf_data(conf_data,conf_name):
     send_data = build_json("insert",send_data)
     res = post_requests(endpoint,send_data)
     return res
+
+def update_worker_status(status,headers=None):
+    data = {
+        "tags" :
+            {"id_worker": ID_WORKER},
+        "fields":
+        {
+            "loc_config": LOC_CONFIG,
+            "loc_schedule_config": LOC_SCHEDULE_CONFIG,
+            "status_worker": status
+            }
+    }
+    json_send = build_json("update",data)
+    res=post_requests('api/worker',json_send,headers)
+    return res

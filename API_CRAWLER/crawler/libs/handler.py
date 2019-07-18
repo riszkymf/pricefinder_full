@@ -10,6 +10,7 @@ from crawler.module.extractors import *
 from crawler.settings import *
 import json
 from time import sleep
+import hashlib 
 
 """
 Product Crawler class inherit company details from Company Details class.
@@ -203,6 +204,8 @@ class ProductCrawler(CompanyDetails):
             self.get_html_content(dump=True)
             return True
         elif new_content != old_content:
+            msg = "Content changed detected on endpoint : {}\nOld:{}\nNew:{}".format(self.endpoint,old_content,new_content)
+            print(msg)
             self.get_html_content(dump=True)
             self.status_html_content = False
             return False
@@ -215,16 +218,20 @@ class ProductCrawler(CompanyDetails):
         url = self.get_url()
         try:
             content = get_page(url)
-            content = content.text
-        except Exception:
+            content = content.text.encode('utf-8')
+            content = hashlib.sha224(content).hexdigest()
+        except Exception as e:
             tmp_worker = Worker(headless=True)
             driver = tmp_worker.driver
             driver.get(url)
             elem = driver.find_element_by_xpath("//*")
             content = elem.get_attribute("outerHTML")
+            content = content.encode('utf-8')
+            content = hashlib.sha224(content).hexdigest()
             driver.quit()
         if dump:
-            filename = "{}_{}".format(self.company_name,self.product_name) + ".txt"
+            filename = self.endpoint.replace("/","__")
+            filename = "{}_{}".format(self.company_name,filename) + ".txt"
             file_path = "{}/{}".format(HTML_LOCATION,filename)
             file_path = get_path(file_path)
             generate_file(file_path,content)
@@ -234,7 +241,8 @@ class ProductCrawler(CompanyDetails):
     @property
     def html_content(self):
         try:
-            filename = "{}_{}".format(self.company_name,self.product_name) + ".txt"
+            filename = self.endpoint.replace('/','__')
+            filename = "{}_{}".format(self.company_name,filename) + ".txt"
             path = 'html_source/{}'.format(filename)
             pathfile = get_path(path)
             data = read_file(pathfile)

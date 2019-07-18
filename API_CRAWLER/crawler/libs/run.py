@@ -38,9 +38,8 @@ def content_check(path=CONF_PATH):
                 check = d.check_html_changes()
                 nm_company_product = d.product_detail['nm_product_name']
                 res=update_scraper_status(check,nm_company_product=nm_company_product)
-                print(res)
 
-def run(path=CONF_PATH,force_headless=False,force_dump=True,dump_location=DUMP_LOCATION):
+def run(path=CONF_PATH,force_headless=False,force_dump=True,dump_to_json=False,dump_location=DUMP_LOCATION):
     crawler_result = list()
     configs = load_crawler_configuration(path)
     failure = {
@@ -79,7 +78,8 @@ def run(path=CONF_PATH,force_headless=False,force_dump=True,dump_location=DUMP_L
                 result.append(dd)
         result_['company'] = _company_details
         write_to_json['company'] = _company_details
-        dump_json_data(write_to_json)
+        if dump_json_data:
+            dump_json_data(write_to_json)
         crawler_result.append(result_)
     if crawler_result and force_dump:
         failure['send'] = register_data(crawler_result)

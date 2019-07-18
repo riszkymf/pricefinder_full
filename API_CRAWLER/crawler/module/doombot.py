@@ -2,6 +2,7 @@ import yaml
 import json
 from ..libs.util import *
 from crawler.settings import *
+from crawler.libs.app import update_worker_status
 from celery.schedules import crontab
 from celery import Celery
 import celery
@@ -75,13 +76,7 @@ class TaskErrorHandler(celery.Task):
     endpoint = "/api/crawler"
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
-        data = {
-            "status": "fail",
-            "einfo": einfo
-        }
-    
-    def on_success(retval, task_id, args, kwargs):
-        data = {
-            "status": "running",
-            "einfo": "NONE"
-        }
+        update_worker_status("Fail : {}".format(str(einfo)))
+
+    def on_success(self, retval, task_id, args, kwargs):
+        update_worker_status("Running")

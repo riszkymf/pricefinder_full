@@ -19,7 +19,8 @@ class WorkerDetails(Resource):
                 data = {
                     "id_worker": str(i['id_worker']),
                     "loc_schedule_config": i["loc_schedule_config"],
-                    "loc_config": i["loc_config"]
+                    "loc_config": i["loc_config"],
+                    "status_worker": i["status_worker"]
                 }
                 obj_userdata.append(data)
         except Exception:
@@ -97,7 +98,8 @@ class WorkerDetails(Resource):
                     data = {
                     "id_worker": str(i['id_worker']),
                     "loc_schedule_config": i["loc_schedule_config"],
-                    "loc_config": i["loc_config"]
+                    "loc_config": i["loc_config"],
+                    "status_worker": i["status_worker"]
                     }
                     obj_userdata.append(data)
                 respons = {

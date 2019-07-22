@@ -7,6 +7,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from crawler.libs.util import *
 from crawler.module.extractors import *
+from crawler.libs.app import update_scraper_status
 from crawler.settings import *
 import json
 from time import sleep
@@ -89,6 +90,7 @@ class ProductCrawler(CompanyDetails):
     status_html_content = False
     status_crawler = False
     ignore_none = None
+    currency_used = None
 
     def __init__(self, config, *args, **kwargs):
         super(ProductCrawler, self).__init__(**config)
@@ -335,6 +337,18 @@ class ProductCrawler(CompanyDetails):
         for key,value in result_tmp.items():
             result[key] = self.filter_ignored(value)
         return result
+
+    def report_error(self):
+        data = self.product_detail
+        res = update_scraper_status("FAIL",data['nm_product_name'])
+        return res
+
+    def register_company(self):
+        send_data = {
+            "nm_company" : self.company_name,
+            "url_company": self.base_url,
+            "currency_used": self.currency_used
+        }
 
 class ContentHandler(ProductCrawler):
     content_name = None

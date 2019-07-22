@@ -63,19 +63,27 @@ def run(path=CONF_PATH,force_headless=False,force_dump=True,dump_to_json=False,d
                 d = ProductCrawler(cfg,is_headless=force_headless,**prods_)
                 _company_details = d.company_detail
                 d.config_worker()
-                dd=d.run()
-                normalized_data = d.normalize(dd)
-                d.write_result(normalized_data)
-                for key,value in normalized_data.items():
-                    if not value:
-                        failure['scrape'].append(d.endpoint)
-                        break
-                _tmp = d.crawler_result()
-                if d.dump_to_database :
-                    result_['data'].append(_tmp)
-                write_to_json['data'].append(_tmp)
-                d.driver.quit()
-                result.append(dd)
+                d.register_company()
+                try:
+                    dd=d.run()
+                except Exception as e:
+                    print(str(e))
+                    print(d.company_detail)
+                    print(d.product_detail)
+                    d.report_error()
+                else:
+                    normalized_data = d.normalize(dd)
+                    d.write_result(normalized_data)
+                    for key,value in normalized_data.items():
+                        if not value:
+                            failure['scrape'].append(d.endpoint)
+                            break
+                    _tmp = d.crawler_result()
+                    if d.dump_to_database :
+                        result_['data'].append(_tmp)
+                    write_to_json['data'].append(_tmp)
+                    d.driver.quit()
+                    result.append(dd)
         result_['company'] = _company_details
         write_to_json['company'] = _company_details
         if dump_json_data:

@@ -1,7 +1,7 @@
 - config:
   - name: cloudkilat
   - base_url: "http://www.cloudkilat.com/"
-  - currency: "IDR"
+  - currency_used: "IDR"
 - product:
   - name: kilat_vm2
   - endpoint: 'layanan/kilat-vm-2.0'

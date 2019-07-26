@@ -203,7 +203,7 @@ def register_hosting(input_data,id_company_product,nm_company_product=None):
         res = post_requests('api/hosting',json_send)
         if find_failure(res):
             failure.append(row)
-    
+            print(d_send)    
     return failure
 
 
@@ -242,7 +242,8 @@ def register_vm(input_data,id_company_product,nm_company_product=None):
         json_send = build_json('insert',d_send)
         res = post_requests('api/vm',json_send)
         if find_failure(res):
-            failure.append(row)  
+            failure.append(row)
+            print(d_send)    
     return failure
 
     
@@ -277,6 +278,7 @@ def register_additional_features(input_data,id_company_product,nm_company_produc
                 res = post_requests('api/additional_features',json_send)
                 if find_failure(res):
                     failure.append(row)
+                    print(d_send)    
         else:
             for field in fields:
                 d_send[field] = str(row.get(field,'NONE'))
@@ -284,8 +286,8 @@ def register_additional_features(input_data,id_company_product,nm_company_produc
             json_send = build_json('insert',d_send)
             res = post_requests('api/additional_features',json_send)
             if find_failure(res):
-                
-                failure.append(row)    
+                failure.append(row)
+                print(d_send)    
     return failure
 
 def find_failure(res):

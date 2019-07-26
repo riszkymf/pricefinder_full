@@ -14,7 +14,6 @@
                   - xpath: '//div[@id="standard-droplets-pricing-table"]/div/div/table/tbody//td[5]/strong'
               - postprocess:
                   - extract_numbers:
-                  - math: {'operator': '*', 'y': 12}
           - spec_ram:
               - extractor:
                   - xpath: '//div[@id="standard-droplets-pricing-table"]/div/div/table/tbody//td[1]/strong'
@@ -47,7 +46,6 @@
                   - xpath: '//div[@id="general-droplets-pricing-table"]/div/div/table/tbody//td[5]/strong'
               - postprocess:
                   - extract_numbers:
-                  - math: {'operator': '*', 'y': 12}
           - spec_ram:
               - extractor:
                   - xpath: '//div[@id="general-droplets-pricing-table"]/div/div/table/tbody//td[1]'
@@ -82,7 +80,6 @@
                   - xpath: '//div[@id="optimized-droplets-pricing-table"]/div/div/table/tbody//td[5]/strong'
               - postprocess:
                   - extract_numbers:
-                  - math: {'operator': '*', 'y': 12}
           - spec_ram:
               - extractor:
                   - xpath: '//div[@id="optimized-droplets-pricing-table"]/div/div/table/tbody//td[1]'

@@ -25,7 +25,6 @@
                   - xpath: //*[@id="pricing-larger-plans"]//tr[*]/td[8]/strong
               - postprocess:
                   - extract_numbers:
-                  - math: {'operator': '*', y: 12}
           - spec_ram:
               - extractor:
                   - xpath: //*[@id="pricing-larger-plans"]//tr[*]/td[2]

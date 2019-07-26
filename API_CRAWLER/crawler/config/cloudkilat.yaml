@@ -14,7 +14,6 @@
                   - xpath: //ul[contains(@class,'price-list')]//li[not(contains(@class,'list-header'))]//h5[@class='price']
               - postprocess:
                   - extract_numbers:
-                  - math: {'operator': '*', y: 12}
           - spec_ram:
               - extractor:
                   - xpath: //div[@class='spesifications']/div[1]//div[contains(@class,'value')]

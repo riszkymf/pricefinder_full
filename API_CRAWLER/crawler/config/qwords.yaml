@@ -73,6 +73,8 @@
       - spec_price:
         - extractor:
           - xpath: "//span[@id='d-harga']"
+        - postprocess:
+          - extract_numbers:
       - spec_storage_volume:
         - extractor:
           - xpath: "//span[@id='d-disk-space']"
@@ -116,6 +118,8 @@
       - spec_price:
         - extractor:
           - xpath: "//span[@id='d-harga']"
+        - postprocess:
+          - extract_numbers:
       - spec_ssd_volume:
         - extractor:
           - xpath: "//span[@id='d-disk-space']"
@@ -154,7 +158,6 @@
           - xpath: '//table[@id="product"]/tbody/tr[1]/th/h5'
         - postprocess:
           - extract_numbers:
-          - math: {'operator' : '*', 'y': 12}
       - spec_free_domain:
         - extractor:
           - xpath: '//table[@id="product"]/tbody/tr[12]/td/div[2]'
@@ -207,7 +210,6 @@
           - xpath: '//span[@id="d-harga"]'
         - postprocess:
           - extract_numbers:
-          - math: {'operator' : '*', 'y': 12}
       - spec_free_domain:
         - extractor:
           - xpath: '//span[@id="d-domain"]'
@@ -255,7 +257,6 @@
                   - xpath: '//table[@id="product"]/tbody/tr[1]/th/h5'
               - postprocess:
                   - extract_numbers:
-                  - math: {'operator' : '*', 'y': 12}
           - spec_free_domain:
               - extractor:
                   - xpath: '//table[@id="product"]/tbody/tr[11]/td/div[2]'

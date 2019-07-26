@@ -30,7 +30,6 @@
                               - xpath: //div[contains(@data-oui-switch-type,"period")]//button[2]
               - postprocess:
                   - extract_numbers:
-                  - math: {'operator': '*', y: 12}
           - spec_os:
               - extractor:
                   - xpath: //div[contains(@data-oui-switch-type,"os")]//button[contains(@class,"active")]
@@ -72,7 +71,6 @@
                               - xpath: //div[contains(@data-oui-switch-type,"period")]//button[2]
               - postprocess:
                   - extract_numbers:
-                  - math: {'operator': '*', y: 12}
           - spec_os:
               - extractor:
                   - xpath: //div[contains(@data-oui-switch-type,"os")]//button[contains(@class,"active")]
@@ -106,7 +104,6 @@
                   - xpath: //div[@class="linuxPrice"]//span[contains(@class,"spanWithPrice")]
               - postprocess:
                   - extract_numbers:
-                  - math: {'operator': '*', y: 12}
           - spec_vcpu:
               - extractor:
                   - xpath: //div[contains(@class,"bestSeller")]/div[1]/div[3]
@@ -183,7 +180,6 @@
                   - xpath: //div[@class="infoConfig"]/div[not(contains(@class,"lineThrough")) and contains(@class,"Price") and not(contains(@style,"none"))]
               - postprocess:
                   - extract_numbers:
-                  - math: {'operator': '*', y: 12}
           - spec_vcpu:
               - extractor:
                   - xpath: //div[contains(@qtlid,"1127914")]
@@ -218,7 +214,6 @@
                   - xpath: //div[contains(@class,"upsale")]//span[contains(@class,"Price")][1]
               - postprocess:
                   - extract_numbers:
-                  - math: {'operator': '*', y: 12}
           - spec_vcpu:
               - extractor:
                   - xpath: //div[contains(@class,"upsale")]//div[contains(@class,"config")]/div[1]/div[2]
@@ -274,7 +269,6 @@
                   - xpath: //div[@class="infoConfig"]/div[not(contains(@class,"lineThrough")) and contains(@class,"Price") and not(contains(@style,"none"))]
               - postprocess:
                   - extract_numbers:
-                  - math: {'operator': '*', y: 12}
           - spec_vcpu:
               - extractor:
                   - xpath: //div[contains(@qtlid,"1127914")]
@@ -309,7 +303,6 @@
                   - xpath: //div[contains(@class,"upsale")]//span[contains(@class,"Price")][1]
               - postprocess:
                   - extract_numbers:
-                  - math: {'operator': '*', y: 12}
           - spec_vcpu:
               - extractor:
                   - xpath: //div[contains(@class,"upsale")]//div[contains(@class,"config")]/div[1]/div[2]

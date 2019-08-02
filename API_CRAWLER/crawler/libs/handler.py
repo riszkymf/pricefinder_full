@@ -5,6 +5,9 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import TimeoutException
 from crawler.libs.util import *
 from crawler.module.extractors import *
 from crawler.libs.app import update_scraper_status
@@ -277,6 +280,9 @@ class ProductCrawler(CompanyDetails):
 #   Obtain data for every action in action chains. 
     def run(self):
         self.check_html_changes()
+        wait = get_loaded(self.driver)
+        if not wait:
+            print("Page not loaded")
         if self.action_chains:
             self.obtain_value()
             data = list()
@@ -483,9 +489,9 @@ class DataSorter(object):
 
 
 def get_loaded(driver):
-    script = "return document.readyState;"
-    result=driver.execute_script(script)
-    if result.lower() != 'complete':
-        return get_loaded(driver)
-    else:
-        return
+    try:
+        myElem = WebDriverWait(driver, 8).until(EC.presence_of_element_located((By.XPATH, '//body')))
+        return True
+    except TimeoutException:
+        print("Loading is too long")
+        return False

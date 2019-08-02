@@ -33,5 +33,37 @@
               - extractor:
                   - xpath: //div[@class='spesifications']/div[5]/div[contains(@class,'value')]
               - postprocess:
-                  - remove_strings: \n
-                  - remove_strings: \nEdition*
+                  - remove_strings: '\n'
+                  - remove_strings: '\nEdition*'
+- product:
+  - name: kilat_hosting
+  - endpoint: 'layanan/kilat-hosting'
+  - type: hosting
+  - data_display: card
+  - content:
+      - pricing:
+          - spec_price:
+              - extractor:
+                  - xpath: //div[@class="pricing pages"]//h1[@class="price"]
+              - postprocess:
+                  - extract_numbers:
+          - spec_storage:
+              - extractor:
+                  - xpath: //div[@class="product-single"]/div[@class="summary pages"]//div[@class="lists"]//li[2]/span
+              - postprocess:
+                  - extract_after: \n
+          - spec_email_account:
+              - extractor:
+                  - xpath: //div[@class="product-single"]/div[@class="summary pages"]//div[@class="lists"]//li[5]/span
+              - postprocess:
+                  - extract_after: \n
+          - spec_free_domain:
+              - extractor:
+                  - xpath: //div[@class="product-single"]/div[@class="summary pages"]//div[@class="lists"]//li[3]/span
+              - postprocess:
+                  - extract_after: \n
+          - spec_database:
+              - extractor:
+                  - xpath: //div[@class="product-single"]/div[@class="summary pages"]//div[@class="lists"]//li[4]/span
+              - postprocess:
+                  - extract_after: \n

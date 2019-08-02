@@ -205,24 +205,32 @@ class RegexExtractBefore(PostProcess):
 
     def __init__(self, value, character):
         regex = '(.*)\{}'.format(character)
-        result = re.search(regex, value)
+        result = re.search(regex, repr(value))
         if not result:
             self.result = value
         else:
-            self.result = result.group(1)
+            result = result.group(1)
+            result = result.replace("'","").replace('"','')
+            self.result = result
 
 
 class RegexExtractAfter(PostProcess):
     
     def __init__(self, value, character):
         regex = "\{}(.*)".format(character)
-        result = re.search(regex, value)
+        result = re.search(regex, repr(value))
         if not result:
             result = value
             self.result = value
         else:
-            self.result = result.group(1)
+            result = result.group(1)
+            result = result.replace("'","").replace('"','')
+            self.result = result
 
+class RemoveExtendedAscii(PostProcess):
+
+    def __init__(self,value):
+        pass
 
 class RegexRaw(PostProcess):
     def __init__(self, value, raw_regex):

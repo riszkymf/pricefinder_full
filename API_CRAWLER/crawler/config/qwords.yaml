@@ -1,5 +1,5 @@
 - config:
-  - name: QWords
+  - name: qwords
   - base_url: "https://www.qwords.com/"
   - currency_used : "IDR"
 - product:

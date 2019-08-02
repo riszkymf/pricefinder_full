@@ -1,23 +1,13 @@
 - config:
-  - name: Linode
+  - name: linode
   - base_url: "https://www.linode.com/"
   - currency_used: "USD"
 - product:
   - name: cloud_server
-  - endpoint: 'pricing'
+  - endpoint: 'pricing#all'
   - type: vm
   - data_display: card
   - skip_first_data: True
-  - action_chains:
-      - open_up:
-          - move_to_element:
-              - to_element:
-                  - xpath: //*[@id="show-larger-plans"]
-              - move_to_window_center: True
-          - click:
-              - on_element:
-                  - xpath: //*[@id="show-larger-plans"]
-              - move_to_window_center: True
   - content:
       - pricing:
           - spec_price:

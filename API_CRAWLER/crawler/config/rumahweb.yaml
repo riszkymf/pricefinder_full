@@ -1,5 +1,5 @@
 - config:
-  - name: Rumah Web
+  - name: rumah_web
   - base_url: "https://www.rumahweb.com/"
   - currency_used: "IDR"
 - product:
@@ -8,7 +8,6 @@
   - type: hosting
   - data_display: card
   - skip_first_data: true
-  - dump_to_database: True
   - action_chains:
       - change_tab:
           - move_to_element:
@@ -24,7 +23,6 @@
                   - xpath: '//*[@id="profesional"]/div/div[*]/div/p[7]/span/strong'
               - postprocess:
                   - extract_convert_float:
-                  - math: {operator: '*', y: '12'}
           - spec_storage:
               - extractor:
                   - xpath: '//*[@id="profesional"]/div/div[*]/div/ul/li[1]/strong'
@@ -50,7 +48,6 @@
   - type: hosting
   - data_display: card
   - skip_first_data: true
-  - dump_to_database: False
   - action_chains:
       - change_tab:
           - move_to_element:
@@ -66,7 +63,6 @@
                   - xpath: '//*[@id="enterprise"]/div/div[*]/div/p[7]/span/strong'
               - postprocess:
                   - extract_convert_float:
-                  - math: {operator: '*', y: '12'}
           - spec_storage:
               - extractor:
                   - xpath: '//*[@id="enterprise"]/div/div[*]/div/ul/li[1]/strong'
@@ -83,3 +79,42 @@
           - web_builder:
               - extractor:
                   - xpath: '//*[@id="enterprise"]/div/div[*]/div/ul/li[7]/strong'
+- product:
+  - name: vps_indonesia
+  - endpoint: '/vps-indonesia/'
+  - type: vm
+  - data_display: card
+  - content:
+      - pricing:
+          - spec_price:
+              - extractor:
+                  - xpath: //div[@class="vps-paket"]//div[@class="row"]//em
+              - postprocess:
+                  - extract_numbers:
+          - spec_ram:
+              - extractor:
+                  - xpath: //div[@class="vps-paket"]//div[@class="row"]//li[@class="ram"]
+              - postprocess:
+                  - extract_numbers:
+          - spec_vcpu:
+              - extractor:
+                  - xpath: //div[@class="vps-paket"]//div[@class="row"]//ul[@class="details"]/li[1]
+          - spec_clock:
+              - extractor:
+                  - xpath: //div[@class="vps-paket"]//div[@class="row"]//li[@class="cpu"]//strong          
+          - spec_storage_volume:
+              - extractor:
+                  - xpath: //div[@class="vps-paket"]//div[@class="row"]//li[@class="storage"]//strong
+          - spec_storage_volume:
+              - extractor:
+                  - xpath: //div[@class="vps-paket"]//div[@class="row"]//li[@class="storage"]//strong                  
+      - additional_features:
+          - iops:
+              - extractor:
+                  - xpath: //div[@class="vps-paket"]//div[@class="row"]//li[@class="iops"]//strong
+          - vswap:
+              - extractor:
+                  - xpath: //div[@class="vps-paket"]//div[@class="row"]//ul[@class="details"]/li[2]/strong
+          - Plesk:
+              - extractor:
+                  - xpath: //div[@class="vps-paket"]//div[@class="row"]//ul[@class="details"]/li[5]

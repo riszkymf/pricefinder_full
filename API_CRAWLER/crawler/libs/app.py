@@ -160,6 +160,8 @@ def register_content(result_data,id_company_product,nm_company_product=None):
         result = register_vm(result_data,id_company_product,nm_company_product)
     elif type_.lower() == 'hosting' and 'pricing' in result_data['content']:
         result = register_hosting(result_data,id_company_product,nm_company_product)
+    elif type_.lower() == 'domain' and 'pricing' in result_data['content']:
+        result = register_domain(result_data,id_company_product,nm_company_product)
     if "additional_features" in result_data['content']:
         additional_data = result_data['content']['additional_features']
     else:
@@ -337,3 +339,43 @@ def update_worker_status(status,headers=None):
     json_send = build_json("update",data)
     res=post_requests('api/worker',json_send,headers)
     return res
+
+def register_domain(input_data,id_company_product,nm_company_product=None):
+    json_template = {
+        "id_company_product": None,
+        "id_domain_type": None,
+        "spec_price": None
+    }
+
+    endpoint = APP_URL+'/api/domain_type'
+    domain_types = requests.get(endpoint)
+    domain_types = domain_types.json()['domain_types']
+    tmp = {}
+    for i in domain_types:
+        tmp[i['nm_domain_type']] = i['id_domain_type']
+    fields = list(json_template.keys())
+    if not id_company_product:
+        nm_company_product = input_data['nm_product_name']
+        json_data = build_json('where',{"nm_company_product": nm_company_product})
+        res = post_requests('api/company_product',json_data)
+        res = res.json()
+        id_company_product = res['data'][0]['id_company_product']
+    failure = list()
+    
+
+    for row in input_data['content']['pricing']:
+        d_send = {}
+        for field in fields:
+            d_send[field] = str(row.get(field,'NONE'))
+        domain_type = row['nm_domain_type'].lower()
+        if domain_type not in list(tmp.keys()):
+            continue
+        d_send['id_domain_type'] = tmp[domain_type]
+        d_send['date_time'] = input_data['datetime']
+        d_send['id_company_product'] = str(id_company_product)
+        json_send = build_json('insert',d_send)
+        res = post_requests('api/domain',json_send)
+        if find_failure(res):
+            failure.append(row)
+            print(d_send)    
+    return failure

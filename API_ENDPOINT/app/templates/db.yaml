@@ -483,3 +483,77 @@ endpoint:
         id_conf:
           name: primary key database
           type: int 
+  dt_domain_type:
+    insert:
+      fields:
+        nm_domain_type:
+          name: product name
+          type: fields
+          default:
+      tags:
+        id_domain_type:
+          name: primary key
+          default: func:get_tag
+    where:
+      tags:
+        id_domain_type:
+          name: primary key
+          type: tags
+          default:
+        nm_domain_type:
+          name: product name
+          type: tags
+          default:
+    remove:
+      tags:
+        id_domain_type:
+          name: primary key
+          type: tags
+  dt_domain:
+    insert:
+      fields:
+        id_company_product:
+          name: product name
+          type: fields
+          default:
+        id_company_product:
+          name: product name
+          type: fields
+          default:
+        id_domain_type:
+          name: product name
+          type: fields
+          default:
+        spec_price:
+          name: product name
+          type: fields
+          default:
+      tags:
+        id_domain:
+          name: primary key
+          default: func:get_tag
+    where:
+      tags:
+        id_domain:
+          name: primary key
+          type: tags
+          default:
+        id_domain_type:
+          name: product name
+          type: tags
+          default:
+    remove:
+      tags:
+        id_domain:
+          name: primary key
+          type: tags
+    view:
+      tags:
+        id_domain:
+          name: field name
+          type: tags
+          default: 
+        id_domain_type:
+          name: field name
+          type: tags
+          default: 

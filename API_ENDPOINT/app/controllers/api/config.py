@@ -18,8 +18,7 @@ class ConfigCrawler(Resource):
             for i in results:
                 data = {
                     "id_conf": str(i['id_conf']),
-                    "conf_nm": i['nm_company'],
-                    "conf_data": i['conf_data']
+                    "conf_nm": i['conf_nm']
                 }
                 obj_userdata.append(data)
         except Exception as e:

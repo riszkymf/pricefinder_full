@@ -8,6 +8,37 @@ import random
 
 from os import listdir
 from os.path import isfile,isdir,join,abspath
+from app.configs import APP_ROOT
+from dotenv import load_dotenv
+
+ENV_PATH = os.path.abspath(os.path.join(os.path.abspath(APP_ROOT),'../.env'))
+load_dotenv(dotenv_path=ENV_PATH)
+CONF_PATH = os.getenv("CRAWLER_CONFIGURATION_PATH")
+DUMP_LOCATION = os.getenv("DATA_DUMP_LOCATION")
+HTML_LOCATION = os.getenv("HTML_CONTENT_DUMP_LOCATION")
+
+def create_dir(path):
+    try:
+        os.mkdir(path)
+    except FileNotFoundError:
+        head = os.path.split(path)[0]
+        tail = os.path.split(path)[1]
+        create_dir(head)
+        return create_dir(path)
+    except FileExistsError:
+        return path
+    except Exception as e:
+        print(e)
+        return False
+    finally:
+        return path
+
+def create_confdir(CONF_PATH=CONF_PATH,DUMP_PATH=DUMP_LOCATION,HTML_PATH=HTML_LOCATION):
+    CONF_DIR = [CONF_PATH,DUMP_LOCATION,HTML_LOCATION]
+    for path in CONF_DIR:
+        check=create_dir(path)
+    if not check:
+        print("Creating Directory Failed")
 
 def load_yaml(filename):
     with open(filename, "r") as f:
@@ -104,10 +135,8 @@ def remove_config(filename):
             return True
 
 def get_conf_path():
-    root = os.getcwd()
-    root = os.path.abspath(root+'/..')
-    dir_ = root + '/conf'
-    return dir_
+    return CONF_PATH
+
 def dump_file(filename,data):
     dir_ = get_conf_path()
     check_1 = os.path.exists(dir_)
@@ -123,7 +152,7 @@ def dump_file(filename,data):
                 print(str(e))
                 return False
     else:
-        os.mkdir(dir_)
+        create_confdir()
         dump_file(file_path,data)
 
 def flatten_dictionaries(input_):

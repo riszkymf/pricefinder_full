@@ -10,6 +10,32 @@ from os.path import isfile,isdir,join,abspath
 from fake_useragent import UserAgent
 from currency_converter import CurrencyConverter
 from datetime import datetime
+from crawler.settings import *
+
+def create_dir(path):
+    try:
+        os.mkdir(path)
+    except FileNotFoundError:
+        head = os.path.split(path)[0]
+        tail = os.path.split(path)[1]
+        create_dir(head)
+        return create_dir(path)
+    except FileExistsError:
+        return path
+    except Exception as e:
+        print(e)
+        return False
+    finally:
+        return path
+
+def create_confdir(CONF_PATH=CONF_PATH,DUMP_PATH=DUMP_LOCATION,HTML_PATH=HTML_LOCATION):
+    CONF_DIR = [CONF_PATH,DUMP_LOCATION,HTML_LOCATION]
+    for path in CONF_DIR:
+        check=create_dir(path)
+    if not check:
+        print("Creating Directory Failed")
+        return
+    return True
 
 def get_time():
     time = datetime.now()

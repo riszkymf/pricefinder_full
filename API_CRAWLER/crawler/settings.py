@@ -1,12 +1,19 @@
 from dotenv import load_dotenv
 import os
 
-load_dotenv(verbose=True)
+HOME = os.path.expanduser('~')
 
+load_dotenv(verbose=True)
+cwd = os.getcwd()
+other_env = os.path.abspath("{}/../.env".format(cwd))
+load_dotenv(dotenv_path=other_env)
+
+## CRAWLER CONFIGURATION FOLDERs
 CONF_PATH = os.getenv("CRAWLER_CONFIGURATION_PATH")
-APP_URL = os.getenv("CRAWLER_URL")
 DUMP_LOCATION = os.getenv("DATA_DUMP_LOCATION")
 HTML_LOCATION = os.getenv("HTML_CONTENT_DUMP_LOCATION")
+TEST_PATH = os.getenv("CRAWLER_CONFIGURATION_PATH")
+APP_URL = os.getenv("CRAWLER_URL")
 
 ## CELERY CONFIGS
 CELERY_BROKER = os.getenv('CELERY_BROKER')

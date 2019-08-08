@@ -179,7 +179,7 @@ class ProductCrawler(CompanyDetails):
         if not wait:
             print("Page not loaded")
         self.driver = worker.driver
-        if not self.window_size:
+        if self.window_size:
             print("Resizing {} x {}".format(self.window_size_x,self.window_size_y))
             self.driver.set_window_size(int(self.window_size_x),int(self.window_size_y))
         else:

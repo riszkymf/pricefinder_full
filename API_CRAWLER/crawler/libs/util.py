@@ -95,7 +95,7 @@ def get_all(folder, ignores=list()):
 def load_config(path):
     if os.path.exists(path):
         if os.path.isdir(path):
-            files_ = get_all(folder)
+            files_ = get_all(path)
             return files_
         else:
             return [path]

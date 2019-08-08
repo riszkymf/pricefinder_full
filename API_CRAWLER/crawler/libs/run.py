@@ -10,7 +10,7 @@ from celery import Celery
 celery_app = Celery(CELERY_APP_NAME,broker=CELERY_BROKER,timezone=CELERY_TIMEZONE)
 
 def load_crawler_configuration(path):
-    files = get_all(path)
+    files = load_config(path)
     f_yaml = list()
     for f in files:
         try:

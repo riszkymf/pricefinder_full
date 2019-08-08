@@ -92,6 +92,17 @@ def get_all(folder, ignores=list()):
     dive(dirs)
     return files
     
+def load_config(path):
+    if os.path.exists(path):
+        if os.path.isdir(path):
+            files_ = get_all(folder)
+            return files_
+        else:
+            return [path]
+    else:
+        print("File/Folder does not exists !")
+        return False
+
 def check_exist(path):
     return os.path.exists(path)
 

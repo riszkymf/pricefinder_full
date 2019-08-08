@@ -94,6 +94,7 @@ class ProductCrawler(CompanyDetails):
     status_crawler = False
     ignore_none = None
     currency_used = None
+    window_size = False
 
     def __init__(self, config, *args, **kwargs):
         super(ProductCrawler, self).__init__(**config)
@@ -123,6 +124,14 @@ class ProductCrawler(CompanyDetails):
                 self.is_headless = value
             elif key == 'ignore_none':
                 self.ignore_none = value
+            elif key == 'window_size':
+                try:        
+                    value = flatten_dictionaries(value)
+                    self.window_size_x = int(value['x'])
+                    self.window_size_y = int(value['y'])
+                    self.window_size = True
+                except Exception:
+                    pass
             elif key == 'action_chains':
                 chain_query = list()
                 self.with_action = True
@@ -166,8 +175,15 @@ class ProductCrawler(CompanyDetails):
         worker = self.worker
         url = self.get_url()
         worker.get(url)
+        wait = get_loaded(worker.driver)
+        if not wait:
+            print("Page not loaded")
         self.driver = worker.driver
-        self.driver.maximize_window()
+        if not self.window_size:
+            print("Resizing {} x {}".format(self.window_size_x,self.window_size_y))
+            self.driver.set_window_size(int(self.window_size_x),int(self.window_size_y))
+        else:
+            self.driver.maximize_window()
         self.action = worker.action
         self.config_action_chains()
 
@@ -280,9 +296,6 @@ class ProductCrawler(CompanyDetails):
 #   Obtain data for every action in action chains. 
     def run(self):
         self.check_html_changes()
-        wait = get_loaded(self.driver)
-        if not wait:
-            print("Page not loaded")
         if self.action_chains:
             self.obtain_value()
             data = list()
@@ -490,7 +503,7 @@ class DataSorter(object):
 
 def get_loaded(driver):
     try:
-        myElem = WebDriverWait(driver, 8).until(EC.presence_of_element_located((By.XPATH, '//body')))
+        myElem = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//body')))
         return True
     except TimeoutException:
         print("Loading is too long")

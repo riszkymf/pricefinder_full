@@ -349,7 +349,7 @@ def register_domain(input_data,id_company_product,nm_company_product=None):
 
     endpoint = APP_URL+'/api/domain_type'
     domain_types = requests.get(endpoint)
-    domain_types = domain_types.json()['domain_types']
+    domain_types = domain_types.json()['nm_domain_type']
     tmp = {}
     for i in domain_types:
         tmp[i['nm_domain_type']] = i['id_domain_type']

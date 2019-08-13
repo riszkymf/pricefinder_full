@@ -41,7 +41,7 @@ CREATE TABLE dt_worker(
     loc_config STRING(200) NULL,
     status_worker STRING(200) NULL,
     CONSTRAINT "primary" PRIMARY KEY (id_worker ASC),
-    UNIQUE INDEX worker_loc_schedule_config (loc_schedule_config ASC),
+    UNIQUE INDEX w orker_loc_schedule_config (loc_schedule_config ASC),
     UNIQUE INDEX worker_loc_config (loc_config ASC),
     FAMILY "primary" (id_worker, loc_schedule_config, loc_config)
     );

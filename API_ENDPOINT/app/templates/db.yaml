@@ -31,6 +31,10 @@ endpoint:
           name: company name
           type: tags
           default:
+        url_company:
+          name: company url
+          type: tags
+          default:
     remove:
       tags:
         id_company:
@@ -483,6 +487,14 @@ endpoint:
         id_conf:
           name: primary key database
           type: int 
+    read:
+      tags:
+        id_conf:
+          name: primary key database
+          type: int
+        nm_conf:
+          name: conf_name
+          type: int
   dt_domain_type:
     insert:
       fields:
@@ -525,6 +537,10 @@ endpoint:
           type: fields
           default:
         spec_price:
+          name: product name
+          type: fields
+          default:
+        date_time:
           name: product name
           type: fields
           default:

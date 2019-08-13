@@ -39,7 +39,8 @@ class Worker(object):
         if headless:
             options.add_argument("--headless")
             options.add_argument("--no-sandbox")
-            options.add_argument("--disable-dev-shm-usage")        
+            options.add_argument("--disable-dev-shm-usage")
+            options.add_argument("--user-agent='Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'")        
         self.driver = webdriver.Chrome(self.driverPath, options=options)
 
     def get(self,url):
@@ -100,6 +101,7 @@ class ProductCrawler(CompanyDetails):
         super(ProductCrawler, self).__init__(**config)
         self.content = {}
         self.action_chains = list()
+        self.chain_query = list()
         self.date_time = get_time()
         for key, value in kwargs.items():
             if key == 'name':
@@ -191,10 +193,11 @@ class ProductCrawler(CompanyDetails):
         if self.with_action:
             action_chains = list()
             chain = self.chain_query
-            for i in chain:
+            for i in range(0,len(chain)):
+                _iter = chain[i]
                 tmp = ActionsHandler(self.action, self.driver, 
-                                     i['chain'], i['chain_name'])
-            action_chains.append(tmp)
+                                     _iter['chain'], _iter['chain_name'])
+                action_chains.append(tmp)
             self.action_chains = action_chains
 
     def obtain_value(self):
@@ -245,8 +248,8 @@ class ProductCrawler(CompanyDetails):
             tmp_worker = Worker(headless=True)
             driver = tmp_worker.driver
             driver.get(url)
-            elem = driver.find_element_by_xpath("//*")
-            content = elem.get_attribute("outerHTML")
+            elem = driver.find_element_by_xpath("//body")
+            content = elem.get_attribute("innerHTML")
             content = content.encode('utf-8')
             content = hashlib.sha224(content).hexdigest()
             driver.quit()
@@ -295,7 +298,9 @@ class ProductCrawler(CompanyDetails):
 
 #   Obtain data for every action in action chains. 
     def run(self):
+        count = 0
         self.check_html_changes()
+        print(self.get_url())
         if self.action_chains:
             self.obtain_value()
             data = list()
@@ -501,10 +506,14 @@ class DataSorter(object):
         return retdat
 
 
-def get_loaded(driver):
+def get_loaded(driver,count=0):
     try:
-        myElem = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, '//body')))
+        myElem = WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.XPATH, '//body')))
         return True
     except TimeoutException:
+        driver.refresh()
         print("Loading is too long")
-        return False
+        if count < 3:
+            get_loaded(count=count+1)
+        else:
+            return False

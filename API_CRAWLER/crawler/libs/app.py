@@ -133,6 +133,7 @@ def register_company_product(company,data=None):
         id_company = None
     nm_product = data['nm_product_name']
     product_type = data["nm_product_type"]
+    date = data['datetime']
     id_product = find_id({"nm_product": product_type},'/api/product')
     try:
         id_product = id_product[0].get('id_product',None)
@@ -143,7 +144,8 @@ def register_company_product(company,data=None):
         "nm_company_product": nm_product,
         "id_company": str(id_company),
         "id_product": str(id_product),
-        "id_worker": str(402140815780249601)
+        "id_worker": str(402140815780249601),
+        "date_time": date
     }
 
     json_data = build_json("insert",d)
@@ -205,7 +207,9 @@ def register_hosting(input_data,id_company_product,nm_company_product=None):
         res = post_requests('api/hosting',json_send)
         if find_failure(res):
             failure.append(row)
-            print(d_send)    
+            print(d_send)
+        else:
+            update_scraper_date(d_send['date_time'],input_data['nm_product_name'],id_company_product)
     return failure
 
 
@@ -246,6 +250,8 @@ def register_vm(input_data,id_company_product,nm_company_product=None):
         if find_failure(res):
             failure.append(row)
             print(d_send)    
+        else:
+            update_scraper_date(d_send['date_time'],input_data['nm_product_name'],id_company_product)
     return failure
 
     
@@ -262,8 +268,12 @@ def register_additional_features(input_data,id_company_product,nm_company_produc
         json_data = build_json('where',{"nm_company_product": nm_company_product})
         res = post_requests('api/company_product',json_data)
         res = res.json()
-        id_company_product = res['data'][0]['id_company_product']
-
+        try:
+            id_company_product = res['data'][0]['id_company_product']
+        except Exception as e:
+            print(str(e))
+            print("Company Product Does Not Exist!")
+            return input_data
     failure = list()
     for row in input_data:
         d_send = {}
@@ -301,6 +311,20 @@ def find_failure(res):
         if not status:
             print(data['message'])
         return not(status)
+
+def update_scraper_date(date,nm_company_product,id_company_product=None):
+    data_find = {"nm_company_product": nm_company_product}
+    try:
+        if not id_company_product:
+            id_company_product = find_id(data_find,'api/company_product')[0]['id_company_product']
+        tmp = {"tags": {"id_company_product": id_company_product},"fields": {"date_time": date}}
+        data_send = build_json('update',tmp)
+        res = post_requests('api/company_product',data_send)
+        return res
+    except Exception as e:
+        print(str(e))
+        return None
+
 
 def update_scraper_status(status,nm_company_product=None):
     data_find = {"nm_company_product": nm_company_product}
@@ -341,7 +365,6 @@ def update_worker_status(status,headers=None):
     return res
 
 def register_domain(input_data,id_company_product,nm_company_product=None):
-    print(input_data)
     json_template = {
         "id_company_product": None,
         "id_domain_type": None,
@@ -367,7 +390,8 @@ def register_domain(input_data,id_company_product,nm_company_product=None):
         d_send = {}
         for field in fields:
             d_send[field] = str(row.get(field,'NONE'))
-        domain_type = row['spec_domain'].lower()
+        domain_type = row.get('spec_domain',row.get('nm_domain_type',"None"))
+        domain_type = domain_type.lower()
         if domain_type not in list(tmp.keys()):
             continue
         d_send['id_domain_type'] = tmp[domain_type]
@@ -377,5 +401,6 @@ def register_domain(input_data,id_company_product,nm_company_product=None):
         res = post_requests('api/domain',json_send)
         if find_failure(res):
             failure.append(row)
-            print(d_send)    
+        else:
+            update_scraper_date(d_send['date_time'],input_data['nm_product_name'],id_company_product)
     return failure

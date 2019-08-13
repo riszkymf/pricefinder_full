@@ -88,6 +88,10 @@ endpoint:
           name: worker reference
           type: fields
           default:
+        date_time:
+          name: worker reference
+          type: fields
+          default:
       tags:
         id_company_product:
           name: primary key
@@ -154,6 +158,10 @@ endpoint:
         status_scraper:
           name: data
           type: field
+          default:
+        date_time:
+          name: worker reference
+          type: fields
           default:
   dt_vm:
     insert:
@@ -482,6 +490,10 @@ endpoint:
           name: company name
           type: tags
           default:
+        date_time:
+          name: primary key database
+          type: tags
+          default:
     remove:
       tags:
         id_conf:
@@ -555,6 +567,10 @@ endpoint:
           type: tags
           default:
         id_domain_type:
+          name: product name
+          type: tags
+          default:
+        date_time:
           name: product name
           type: tags
           default:

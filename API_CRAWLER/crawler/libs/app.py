@@ -341,15 +341,15 @@ def update_worker_status(status,headers=None):
     return res
 
 def register_domain(input_data,id_company_product,nm_company_product=None):
+    print(input_data)
     json_template = {
         "id_company_product": None,
         "id_domain_type": None,
-        "spec_price": None
-    }
+        "spec_price": None}
 
     endpoint = APP_URL+'/api/domain_type'
     domain_types = requests.get(endpoint)
-    domain_types = domain_types.json()['nm_domain_type']
+    domain_types = domain_types.json()['data']
     tmp = {}
     for i in domain_types:
         tmp[i['nm_domain_type']] = i['id_domain_type']
@@ -367,11 +367,11 @@ def register_domain(input_data,id_company_product,nm_company_product=None):
         d_send = {}
         for field in fields:
             d_send[field] = str(row.get(field,'NONE'))
-        domain_type = row['nm_domain_type'].lower()
+        domain_type = row['spec_domain'].lower()
         if domain_type not in list(tmp.keys()):
             continue
         d_send['id_domain_type'] = tmp[domain_type]
-        d_send['date_time'] = input_data['datetime']
+        d_send['date_time'] = str(input_data['datetime'])
         d_send['id_company_product'] = str(id_company_product)
         json_send = build_json('insert',d_send)
         res = post_requests('api/domain',json_send)

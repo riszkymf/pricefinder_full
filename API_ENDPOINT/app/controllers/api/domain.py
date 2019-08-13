@@ -19,7 +19,7 @@ class DomainDetails(Resource):
                 data = {
                     "id_domain": str(i['id_domain']),
                     "id_company_product": str(i['id_company_product']),
-                    "id_domain_type": i['id_domain_type'],
+                    "id_domain_type": str(i['id_domain_type']),
                     'spec_price': i['spec_price'],
                     "date_time": i['date_time']
                 }
@@ -86,17 +86,17 @@ class DomainDetails(Resource):
                 for a in tags:
                     if tags[a] is not None:
                         fields = a
-            column = model.get_columns("v_hosting")
+            column = model.get_columns("v_domain")
             try:
                 result = list()
                 if fields is None:
-                    query = """select * from v_product_vm"""
+                    query = """select * from v_domain"""
                     db.execute(query)
                     rows = db.fetchall()
                     for row in rows:
                         result.append(dict(zip(column, row)))
                 else:
-                    query = """ select * from v_hosting where """+fields+"""='"""+tags[fields]+"""'"""
+                    query = """ select * from v_domain where """+fields+"""='"""+tags[fields]+"""'"""
                     db.execute(query)
                     rows = db.fetchall()
                     for row in rows:
@@ -111,7 +111,7 @@ class DomainDetails(Resource):
                     data = {
                     "id_domain": str(i['id_domain']),
                     "id_company_product": str(i['id_company_product']),
-                    "id_domain_type": i['id_domain_type'],
+                    "id_domain_type": str(i['id_domain_type']),
                     'spec_price': i['spec_price'],
                     "date_time": i['date_time']
                     }

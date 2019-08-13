@@ -32,6 +32,7 @@ class Extractors(object):
     is_preaction = False
     _preactions_chains = None
     static = False
+    attribute = None
 
     def __init__(self, **kwargs):
         self.postprocess = list()
@@ -118,24 +119,25 @@ class SeleniumElementsExtractor(object):
 
     def run(self):
         driver = self.driver
-        if not self.max_height:
-            self.get_page_height()
-            self.get_steps()
-        text_result = []
-        self.cycle = 0
-        while "" in text_result or not text_result:
-            self.scroll_page()
-            result = driver.find_elements(self.filter_, self.value)
-            text_result = [i.text for i in result]
-            if self.cycle < 3:
-                self.reset_scroll()
-            else:
-                print("Unable To Obtain Data: {}".format(self.value))
-                break
-        if self.attribute:
-            result = [i.get_attribute(self.attribute) for i in result]
-        else:
+        if not self.attribute:
+            if not self.max_height:
+                self.get_page_height()
+                self.get_steps()
+            text_result = []
+            self.cycle = 0
+            while "" in text_result or not text_result:
+                self.scroll_page()
+                result = driver.find_elements(self.filter_, self.value)
+                text_result = [i.text for i in result]
+                if self.cycle < 3:
+                    self.reset_scroll()
+                else:
+                    print("Unable To Obtain Data: {}".format(self.value))
+                    break
             result = [i.text for i in result]
+        else:
+            result = driver.find_elements(self.filter_, self.value)
+            result = [i.get_attribute(self.attribute) for i in result]
         return result
 
     def get_page_height(self):
@@ -344,11 +346,14 @@ class ActionsHandler(object):
     action = None
     name = 'Default'
     repeat = 1
+    query = None
+    
 
-    def __init__(self, action, driver, query, name=None):
+    def __init__(self, action, driver, query, name="Default"):
         self.action = action
         self.driver = driver
         self.query = query
+        self.name = name
         for i in query:
             if 'run' in i:
                 self.config_run(i['run'])
@@ -407,15 +412,27 @@ class Actions(ActionsHandler):
     query = None
     action_execute = None
     move_to_center = False
+    move_to_center_delay = 1
+    run_count = None
 
     def __init__(self, action, driver, query):
         self.action = action
         self.driver = driver
         self.action_type = query.pop('action')
+        if 'run' in query:
+            self.run_count = query.pop('run')
         query['driver'] = driver
         query['action'] = action
         try:
-            self.move_to_center = query['move_to_window_center']
+            if isinstance(query['move_to_window_center'],bool):
+                self.move_to_center = query['move_to_window_center']
+            elif isinstance(query['move_to_window_center'],int) or isinstance(query['move_to_window_center'],float):
+                self.move_to_center = True
+                self.move_to_center_delay = query['move_to_window_center']
+            elif isinstance(flatten_dictionaries(query['move_to_window_center']),dict):
+                node = flatten_dictionaries(query['move_to_window_center'])
+                self.move_to_center = True
+                self.move_to_center_delay = node['delay']
         except Exception:
             self.move_to_center = False
         self.query = self.parse_arguments(self.action_type, query)
@@ -577,12 +594,13 @@ class Actions(ActionsHandler):
 
     def _move_element_to_center(self, element):
         driver = self.driver
+        delay = self.move_to_center_delay
         x = element.location['x']
         y = element.location['y']
         windowHeight = driver.execute_script("return window.innerHeight")
         centerHeightY = (y-(windowHeight/3))
         driver.execute_script("return window.scrollTo(0,{});".format(centerHeightY))
-        sleep(0.1)
+        sleep(delay)
 
     def modifier_key(self, value):
         mod_key =  {'ADD': "u'\ue025'",
@@ -656,3 +674,14 @@ class Actions(ActionsHandler):
             return value
 
 
+class Counter(object):
+    total_run = None
+    count = None
+    remains = None
+
+    def __init__(self,total):
+        self.total_run = total
+
+    def negate(self):
+        self.count = self.count + 1
+        self.remains = self.total_run - self.count

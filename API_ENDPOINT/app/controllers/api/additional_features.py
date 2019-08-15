@@ -18,11 +18,17 @@ class FeatureDetails(Resource):
             for i in results:
                 data = {
                     "id_additional_features": str(i['id_additional_features']),
-                    "id_company_product": i['id_company_product'],
+                    "id_company_product": str(i['id_company_product']),
                     'spec_features': i['spec_features'],
                     'spec_features_value': i['spec_features_value'],
-                    "spec_features_price": i['spec_features_price']
+                    "spec_features_price": i['spec_features_price'],
+                    "id_vm": None,
+                    "id_hosting": None
                 }
+                if i['id_vm']:
+                    data['id_vm'] = str(i['id_vm'])
+                else:
+                    data['id_hosting'] = str(i['id_hosting'])
                 obj_userdata.append(data)
         except Exception:
             results = None
@@ -98,10 +104,12 @@ class FeatureDetails(Resource):
                 for i in result :
                     data = {
                     "id_additional_features": str(i['id_additional_features']),
-                    "id_company_product": i['id_company_product'],
+                    "id_company_product": str(i['id_company_product']),
                     'spec_features': i['spec_features'],
                     'spec_features_value': i['spec_features_value'],
-                    "spec_features_price": i['spec_features_price']
+                    "spec_features_price": i['spec_features_price'],
+                    "id_hosting": i['id_hosting'],
+                    "id_vm": i["id_vm"]
                     }
                     obj_userdata.append(data)
                 respons = {

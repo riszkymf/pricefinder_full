@@ -98,8 +98,10 @@ class VMDetails(Resource):
                     if tags[a] is not None:
                         fields = a
             column = model.get_columns("v_product_vm")
+            column_additional_features = model.get_columns("dt_additional_features")
             try:
                 result = list()
+                result_additional_features = list()
                 if fields is None:
                     query = """select * from v_product_vm"""
                     db.execute(query)
@@ -107,46 +109,55 @@ class VMDetails(Resource):
                     for row in rows:
                         result.append(dict(zip(column, row)))
                 else:
-                    query = """ select * from v_product_vm_test where """+fields+"""='"""+tags[fields]+"""'"""
+                    query = """ select * from v_product_vm where """+fields+"""='"""+tags[fields]+"""'"""
                     db.execute(query)
                     rows = db.fetchall()
                     for row in rows:
                         result.append(dict(zip(column, row)))
+                query = """ select * from dt_additional_features where id_vm is not null"""
+                db.execute(query)
+                rows = db.fetchall()
+                for row in rows:
+                    result_additional_features.append(dict(zip(column_additional_features,row)))
             except Exception as e:
                 respons = {
                     "status": False,
                     "messages": str(e)
                 }
             else:
-                for i in result :
-                    data = {
-                    "id_company": str(i['id_company']),
-                    "id_company_product": str(i['id_company_product']),
-                    "id_product": str(i['id_product']),
-                    'id_vm': str(i['id_vm']),
-                    "id_additional_features": str(i['id_additional_features']),
-                    "nm_company": i['nm_company'],
-                    "url_company": i['url_company'],
-                    'nm_company_product': i['nm_company_product'],
-                    "nm_product": i['nm_product'],
-                    "currency_used": i['currency_used'],
-                    'spec_clock': i['spec_clock'],
-                    "spec_ram": i['spec_ram'],
-                    "spec_os": i['spec_os'],
-                    'spec_storage_volume': i['spec_storage_volume'],
-                    "spec_ssd_volume": i['spec_ssd_volume'],
-                    "spec_snapshot_volume": i['spec_snapshot_volume'],
-                    "spec_template_volume": i['spec_template_volume'],
-                    'spec_iso_volume': i['spec_iso_volume'],
-                    "spec_public_ip": i['spec_public_ip'],
-                    "spec_backup_storage": i['spec_backup_storage'],
-                    'spec_features': i['spec_features'],
-                    "spec_features_value": i['spec_features_value'],
-                    "spec_features_price": i['spec_features_price'],
-                    'spec_price': i['spec_price'],
-                    "date_time": i['date_time']
-
-                    }
+                for i in result:
+                    data_additional_features = list()
+                    for row in result_additional_features:
+                        if row['id_vm'] == i['id_vm']:
+                            data_additional_features.append(row)
+                    try:
+                        data = {
+                        "id_company": str(i['id_company']),
+                        "id_company_product": str(i['id_company_product']),
+                        "id_product": str(i['id_product']),
+                        'id_vm': str(i['id_vm']),
+                        "nm_company": i['nm_company'],
+                        "url_company": i['url_company'],
+                        'nm_company_product': i['nm_company_product'],
+                        "nm_product": i['nm_product'],
+                        "currency_used": i['currency_used'],
+                        'spec_clock': i['spec_clock'],
+                        "spec_ram": i['spec_ram'],
+                        "spec_os": i['spec_os'],
+                        "spec_vcpu": i['spec_vcpu'],
+                        'spec_storage_volume': i['spec_storage_volume'],
+                        "spec_ssd_volume": i['spec_ssd_volume'],
+                        "spec_snapshot_volume": i['spec_snapshot_volume'],
+                        "spec_template_volume": i['spec_template_volume'],
+                        'spec_iso_volume': i['spec_iso_volume'],
+                        "spec_public_ip": i['spec_public_ip'],
+                        "spec_backup_storage": i['spec_backup_storage'],
+                        'spec_price': i['spec_price'],
+                        "date_time": i['date_time'],
+                        "additional_features":data_additional_features
+                        }
+                    except Exception as e:
+                        print(str(e))
                     obj_userdata.append(data)
                 respons = {
                     "status": True,

@@ -350,6 +350,14 @@ endpoint:
         id_company_product:
           name: company_product
           type: fields
+        id_vm:
+          name: company_product
+          type: fields
+          default: 
+        id_hosting:
+          name: company_product
+          type: fields
+          default: 
         spec_features:
           name: field name
           type: fields
@@ -388,6 +396,14 @@ endpoint:
           name: tag_name
           type: tags
           default:
+        id_vm:
+          name: company_product
+          type: fields
+          default: null
+        id_hosting:
+          name: company_product
+          type: fields
+          default: null
     remove:
       tags:
         id_additional_features:

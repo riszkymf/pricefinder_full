@@ -137,8 +137,10 @@ class HostingDetails(Resource):
                     if tags[a] is not None:
                         fields = a
             column = model.get_columns("v_product_hosting")
+            column_additional_features = model.get_columns("dt_additional_features")
             try:
                 result = list()
+                result_additional_features = list()
                 if fields is None:
                     query = """select * from v_product_hosting"""
                     db.execute(query)
@@ -151,19 +153,27 @@ class HostingDetails(Resource):
                     rows = db.fetchall()
                     for row in rows:
                         result.append(dict(zip(column, row)))
+                query = """ select * from dt_additional_features where id_hosting is not null"""
+                db.execute(query)
+                rows = db.fetchall()
+                for row in rows:
+                    result_additional_features.append(dict(zip(column_additional_features,row)))
             except Exception as e:
                 respons = {
                     "status": False,
                     "messages": str(e)
                 }
             else:
+                data_additional_features = list()
+                for row in result_additional_features:
+                    if row['id_vm'] == i['id_vm']:
+                        data_additional_features.append(row)
                 for i in result :
                     data = {
                     "id_company": str(i["id_company"]),
                     "id_product": str(i["id_product"]),
                     "id_hosting": str(i['id_hosting']),
                     "id_company_product": str(i['id_company_product']),
-                    "id_additional_features": str(i["id_additional_features"]),
                     "nm_company": i['nm_company'],
                     "url_company": i['url_company'],
                     "nm_product": i['nm_product'],
@@ -180,9 +190,7 @@ class HostingDetails(Resource):
                     'spec_email_account': i['spec_email_account'],
                     "spec_spam_filter": i['spec_spam_filter'],
                     "date_time": i['date_time'],
-                    "spec_features": i['spec_features'],
-                    "spec_features_value": i['spec_features_value'],
-                    "spec_features_price": i['spec_features_price']
+                    "additional_features": data_additional_features
                     }
                     obj_userdata.append(data)
                 respons = {

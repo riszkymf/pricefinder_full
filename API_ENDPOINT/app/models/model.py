@@ -44,8 +44,12 @@ def insert(table, data = None):
     value = ''
     column = ''
     for row in data:
-        column += row+","
-        value += "'"+str(data[row]+"',")
+        if data[row] is None:
+            continue
+        else:
+            column += row+","
+            value += "'"+str(data[row]+"',")
+        check_str = "INSERT INTO "+table+" "+column+" VALUES "+value+" RETURNING *"
     column = "("+column[:-1]+")"
     value = "("+value[:-1]+")"
     try:

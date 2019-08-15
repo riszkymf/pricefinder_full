@@ -73,11 +73,16 @@ CREATE TABLE dt_vm(
 CREATE TABLE dt_additional_features(
     id_additional_features INT NOT NULL DEFAULT unique_rowid(),
     id_company_product INT NOT NULL,
+    id_vm INT NULL,
+    id_hosting INT NULL,
     spec_features STRING(200) NULL,
     spec_features_value STRING(200) NULL,
     spec_features_price STRING(200) NULL,
     CONSTRAINT dt_additional_features_pk PRIMARY KEY (id_additional_features ASC),
     INDEX company_product_auto_index_fk_id_company_product_ref_company_product (id_company_product ASC),
+    INDEX vm_auto_index_fk_id_vm_ref_vm (id_vm ASC),
+    INDEX hosting_auto_index_fk_id_hosting_ref_hosting (id_hosting ASC),
+
     FAMILY "primary" (id_additional_features,id_company_product,spec_features,spec_features_value,spec_features_price)
 );
 
@@ -133,6 +138,8 @@ ALTER TABLE dt_company_product ADD CONSTRAINT worker_auto_index_fk_id_worker_ref
 ALTER TABLE dt_company_product ADD CONSTRAINT conf_auto_index_fk_id_conf_ref_conf FOREIGN KEY (id_conf) REFERENCES dt_config(id_conf) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE dt_vm ADD CONSTRAINT company_product_auto_index_fk_id_company_product_ref_company_product FOREIGN KEY (id_company_product) REFERENCES dt_company_product (id_company_product) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE dt_additional_features ADD CONSTRAINT company_product_auto_index_fk_id_company_product_ref_company_product FOREIGN KEY (id_company_product) REFERENCES dt_company_product(id_company_product) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE dt_additional_features ADD CONSTRAINt vm_auto_index_fk_id_vm_ref_vm FOREIGN KEY(id_vm) REFERENCES dt_vm(id_vm) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE dt_additional_features ADD CONSTRAINT hosting_auto_index_fk_id_hosting_ref_hosting FOREIGN KEY(id_hosting) REFERENCES dt_hosting(id_hosting) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE dt_hosting ADD CONSTRAINT company_product_auto_index_fk_id_company_product_ref_company_product FOREIGN KEY (id_company_product) REFERENCES dt_company_product (id_company_product) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE dt_domain ADD CONSTRAINT company_product_auto_index_fk_id_company_product_ref_company_product FOREIGN KEY (id_company_product) REFERENCES dt_company_product (id_company_product) ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE dt_domain ADD CONSTRAINT domain_type_auto_index_fk_id_domain_type_ref_domain_type FOREIGN KEY (id_domain_type) REFERENCES dt_domain_type (id_domain_type) ON DELETE CASCADE ON UPDATE CASCADE;
@@ -150,17 +157,17 @@ ALTER TABLE dt_domain ADD CONSTRAINT domain_type_auto_index_fk_id_domain_type_re
 -- AS SELECT m1.id_company,m3.id_company_product,m2.id_product,m4.id_domain_type,m5.id_domain,m4.nm_domain_type,m5.spec_price,m5.date_time
 -- FROM public.dt_domain as m5 JOIN public.dt_company_product AS m3 on m5.id_company_product = m3.id_company_product JOIN public.dt_product as m2 on m3.id_product = m2.id_product JOIN public.dt_company as m1 on m3.id_company = m1.id_company JOIN public.dt_domain_type as m4 on m5.id_domain_type = m4.id_domain_type;
 
-CREATE VIEW v_product_vm (id_company,id_company_product,id_product,id_vm,id_additional_features,nm_company,url_company,nm_company_product,nm_product,currency_used,spec_vcpu,spec_clock,spec_ram,spec_os,spec_storage_volume,spec_ssd_volume,spec_snapshot_volume,spec_template_volume,spec_iso_volume,spec_public_ip,spec_backup_storage,spec_features,spec_features_value,spec_features_price,spec_price,date_time)
-AS SELECT m1.id_company, m3.id_company_product,m2.id_product, m4.id_vm, m5.id_additional_features, m1.nm_company, m1.url_company, m3.nm_company_product, m2.nm_product, m1.currency_used,  m4.spec_vcpu, m4.spec_clock,m4.spec_ram, m4.spec_os, m4.spec_storage_volume, m4.spec_ssd_volume, m4.spec_snapshot_volume, m4.spec_template_volume, m4.spec_iso_volume, m4.spec_public_ip, m4.spec_backup_storage,m5.spec_features,m5.spec_features_value,m5.spec_features_price,m4.spec_price,m4.date_time
-FROM public.dt_vm AS m4 JOIN public.dt_company_product as m3 ON m4.id_company_product = m3.id_company_product  AND m4.date_time = m3.date_time JOIN public.dt_product as m2 on m3.id_product = m2.id_product JOIN public.dt_company as m1 on m3.id_company = m1.id_company JOIN public.dt_additional_features as m5 on m3.id_company_product = m5.id_company_product;
+CREATE VIEW v_product_vm (id_company,id_company_product,id_product,id_vm,nm_company,url_company,nm_company_product,nm_product,currency_used,spec_vcpu,spec_clock,spec_ram,spec_os,spec_storage_volume,spec_ssd_volume,spec_snapshot_volume,spec_template_volume,spec_iso_volume,spec_public_ip,spec_backup_storage,spec_price,date_time)
+AS SELECT m1.id_company, m3.id_company_product,m2.id_product, m4.id_vm, m1.nm_company, m1.url_company, m3.nm_company_product, m2.nm_product, m1.currency_used,  m4.spec_vcpu, m4.spec_clock,m4.spec_ram, m4.spec_os, m4.spec_storage_volume, m4.spec_ssd_volume, m4.spec_snapshot_volume, m4.spec_template_volume, m4.spec_iso_volume, m4.spec_public_ip, m4.spec_backup_storage,m4.spec_price,m4.date_time
+FROM public.dt_vm AS m4 JOIN public.dt_company_product as m3 ON m4.id_company_product = m3.id_company_product  AND m4.date_time = m3.date_time JOIN public.dt_product as m2 on m3.id_product = m2.id_product JOIN public.dt_company as m1 on m3.id_company = m1.id_company;
 
 CREATE VIEW v_domain (id_company,id_company_product,id_product,id_domain_type,id_domain,nm_domain_type,spec_price,date_time) 
 AS SELECT m1.id_company,m3.id_company_product,m2.id_product,m4.id_domain_type,m5.id_domain,m4.nm_domain_type,m5.spec_price,m5.date_time
 FROM public.dt_domain as m5 JOIN public.dt_company_product AS m3 on m5.id_company_product = m3.id_company_product AND m3.date_time = m5.date_time JOIN public.dt_product as m2 on m3.id_product = m2.id_product JOIN public.dt_company as m1 on m3.id_company = m1.id_company JOIN public.dt_domain_type as m4 on m5.id_domain_type = m4.id_domain_type;
 
-CREATE VIEW v_product_hosting (id_company,id_company_product,id_product,id_hosting,id_additional_features,nm_company,url_company,nm_product,nm_company_product,currency_used,spec_storage,spec_database,spec_free_domain,spec_hosting_domain,spec_subdomain,spec_ftp_user,spec_control_panel,spec_email_account,spec_spam_filter,date_time,spec_features,spec_features_value,spec_features_price,spec_price) 
-AS SELECT m1.id_company,m3.id_company_product,m2.id_product,m4.id_hosting,m5.id_additional_features,m1.nm_company,m1.url_company,m2.nm_product,m3.nm_company_product,m1.currency_used,m4.spec_storage,m4.spec_database,m4.spec_free_domain,m4.spec_hosting_domain,m4.spec_subdomain,m4.spec_ftp_user,m4.spec_control_panel,m4.spec_email_account,m4.spec_spam_filter,m4.date_time,m5.spec_features,m5.spec_features_value,m5.spec_features_price,m4.spec_price 
-FROM public.dt_hosting as m4 JOIN public.dt_company_product AS m3 on m4.id_company_product = m3.id_company_product AND m4.date_time = m3.date_time JOIN public.dt_product as m2 on m3.id_product = m2.id_product JOIN public.dt_company as m1 on m3.id_company = m1.id_company JOIN public.dt_additional_features as m5 on m3.id_company_product = m5.id_company_product;
+CREATE VIEW v_product_hosting (id_company,id_company_product,id_product,id_hosting,nm_company,url_company,nm_product,nm_company_product,currency_used,spec_storage,spec_database,spec_free_domain,spec_hosting_domain,spec_subdomain,spec_ftp_user,spec_control_panel,spec_email_account,spec_spam_filter,date_time,spec_price) 
+AS SELECT m1.id_company,m3.id_company_product,m2.id_product,m4.id_hosting,m1.nm_company,m1.url_company,m2.nm_product,m3.nm_company_product,m1.currency_used,m4.spec_storage,m4.spec_database,m4.spec_free_domain,m4.spec_hosting_domain,m4.spec_subdomain,m4.spec_ftp_user,m4.spec_control_panel,m4.spec_email_account,m4.spec_spam_filter,m4.date_time,m4.spec_price 
+FROM public.dt_hosting as m4 JOIN public.dt_company_product AS m3 on m4.id_company_product = m3.id_company_product AND m4.date_time = m3.date_time JOIN public.dt_product as m2 on m3.id_product = m2.id_product JOIN public.dt_company as m1 on m3.id_company = m1.id_company;
 
 INSERT INTO dt_product(id_product, nm_product, nm_databaseRef) VALUES
 (402140280385142785, 'vm', 'dt_vm'),

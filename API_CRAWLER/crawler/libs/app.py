@@ -158,17 +158,29 @@ def register_content(result_data,id_company_product,nm_company_product=None):
     failures = list()
     result = list()
     type_ = result_data['nm_product_type']
+    additional_ids = None
     if type_.lower() == 'vm' and 'pricing' in result_data['content']:
         result = register_vm(result_data,id_company_product,nm_company_product)
+        additional_ids = result['ids']
+        result = result['failure']
     elif type_.lower() == 'hosting' and 'pricing' in result_data['content']:
         result = register_hosting(result_data,id_company_product,nm_company_product)
+        additional_ids = result['ids']
+        result = result['failure']
     elif type_.lower() == 'domain' and 'pricing' in result_data['content']:
         result = register_domain(result_data,id_company_product,nm_company_product)
+        additional_ids = result['ids']
+        result = result['failure']
     if "additional_features" in result_data['content']:
         additional_data = result_data['content']['additional_features']
     else:
         additional_data = [{}]
-    additional_result = register_additional_features(additional_data,id_company_product,nm_company_product)
+    try:
+        additional_result = register_additional_features(additional_data,additional_ids,id_company_product,nm_company_product)
+    except Exception as e:
+        print("-----------------------------------------------")
+        print(result_data)
+        print(str(e))
     failures =  result + additional_result
     return failures
 
@@ -188,6 +200,7 @@ def register_hosting(input_data,id_company_product,nm_company_product=None):
         "spec_spam_filter": None,
         "date_time": None
     }
+    additional_ids = []
     fields = list(json_template.keys())
     if not id_company_product:
         nm_company_product = input_data['nm_product_name']
@@ -210,7 +223,10 @@ def register_hosting(input_data,id_company_product,nm_company_product=None):
             print(d_send)
         else:
             update_scraper_date(d_send['date_time'],input_data['nm_product_name'],id_company_product)
-    return failure
+            id_hosting = res.json()['message']['id']
+            additional_ids.append({"id_hosting":id_hosting})
+    return_value = {"failure": failure,"ids":additional_ids}
+    return return_value
 
 
 def register_vm(input_data,id_company_product,nm_company_product=None):
@@ -231,6 +247,7 @@ def register_vm(input_data,id_company_product,nm_company_product=None):
             "spec_notes": None,
             "date_time": None
         }
+    additional_ids = list()
     fields = list(json_template.keys())
     if not id_company_product:
         nm_company_product = input_data['nm_product_name']
@@ -252,11 +269,14 @@ def register_vm(input_data,id_company_product,nm_company_product=None):
             print(d_send)    
         else:
             update_scraper_date(d_send['date_time'],input_data['nm_product_name'],id_company_product)
-    return failure
+            id_vm = res.json()['message']['id']
+            additional_ids.append({"id_vm": id_vm})
+    return_value = {"failure": failure,"ids":additional_ids}
+    return return_value
 
     
 
-def register_additional_features(input_data,id_company_product,nm_company_product=None):
+def register_additional_features(input_data,identity,id_company_product,nm_company_product=None):
     json_template = {
         "id_company_product": None,
         'spec_features': None,
@@ -275,7 +295,25 @@ def register_additional_features(input_data,id_company_product,nm_company_produc
             print("Company Product Does Not Exist!")
             return input_data
     failure = list()
-    for row in input_data:
+    if not identity:
+        for row in input_data:
+            d_send = dict()
+            if row:
+                for key,value in row.items():
+                    if key.lower() == 'spec_features_price':
+                        continue
+                    else:
+                        d_send['spec_features'] = str(key)
+                        d_send['spec_features_value'] = str(value)
+                    d_send['spec_features_price'] = str(row.get('spec_features_price','NONE'))
+                    d_send['id_company_product'] = str(id_company_product)
+                    json_send = build_json('insert',d_send)
+                    res = post_requests('api/additional_features',json_send)
+                    if find_failure(res):
+                        failure.append(row)
+                        print(d_send)
+        return failure
+    for row,_id in zip(input_data,identity):
         d_send = {}
         if row:
             for key,value in row.items():
@@ -286,6 +324,7 @@ def register_additional_features(input_data,id_company_product,nm_company_produc
                     d_send['spec_features_value'] = str(value)
                 d_send['spec_features_price'] = str(row.get('spec_features_price','NONE'))
                 d_send['id_company_product'] = str(id_company_product)
+                d_send = {**d_send, **_id}
                 json_send = build_json('insert',d_send)
                 res = post_requests('api/additional_features',json_send)
                 if find_failure(res):
@@ -369,7 +408,7 @@ def register_domain(input_data,id_company_product,nm_company_product=None):
         "id_company_product": None,
         "id_domain_type": None,
         "spec_price": None}
-
+    additional_ids = list()
     endpoint = APP_URL+'/api/domain_type'
     domain_types = requests.get(endpoint)
     domain_types = domain_types.json()['data']
@@ -403,4 +442,7 @@ def register_domain(input_data,id_company_product,nm_company_product=None):
             failure.append(row)
         else:
             update_scraper_date(d_send['date_time'],input_data['nm_product_name'],id_company_product)
-    return failure
+            id_domain = res.json()['message']['id']
+            additional_ids.append({"id_domain":id_domain})
+    return_value = {"failure": failure, "ids":additional_ids}
+    return return_value

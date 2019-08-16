@@ -118,3 +118,159 @@ def register_data(data):
             result = register_content(item,id_company_product,nm_company_product)
             fail = fail+result
     return fail
+
+class CrawlerExecutor(object):
+    _path = None
+    dump_location = DUMP_LOCATION
+    is_scrape = False
+    is_check_content = False
+    stack_send = False
+    
+    def __init__(self,path=CONF_PATH, scrape=False, check_content=False, **kwargs):
+        self._paths = load_config(path)
+        self._path = path
+        self.is_scrape = scrape
+        self.check_content = check_content
+        for key,value in kwargs.items():
+            setattr(self,key,value)
+            
+        self.configure_crawler()
+        
+    def load_crawler_configuration(self,path):
+        files = load_config(path)
+        f_yaml = list()
+        for f in files:
+            try:
+                tmp = load_yaml(f)
+            except Exception as e:
+                print("Error {} ".format(str(e)))
+                continue
+            finally:
+                f_yaml.append(tmp)
+        return f_yaml
+
+    def configure_crawler(self):
+        _handler = list()
+        status = {"sent": None,"scrape":None}
+        conf = self.load_crawler_configuration(self._path)
+        for i,j in zip(conf,self._paths):
+            d = {"path": None, "crawler_configuration": list()}
+            cfg = flatten_dictionaries(i[0]['config'])
+            cfg['company_name'] = cfg.pop('name')
+            configuration = list()
+            for row in i:
+                if 'product' not in row:
+                    continue
+                else:
+                    products = row['product']
+                    _products = flatten_dictionaries(products)
+                    dd = ProductCrawler(cfg,is_headless=False,**_products)
+                    configuration.append({"config": dd, "status": status})
+            d['path'] = j
+            d['crawler_configuration'] = configuration
+            d['company_configuration'] = cfg
+            _handler.append(d)
+        self._handler = _handler
+        return _handler
+    
+    @property
+    def crawler_configs(self):
+        return self._handler
+    
+    
+    
+    @property
+    def runner_status(self):
+        keys = ["sent","failure"]
+    
+    @property
+    def runner_configs(self):
+        keys = ["force_headless","force_dump","dump_to_json","dump_location","stack_send"]
+        d = {}
+        for i in keys:
+            d[i] = getattr(self,i,None)
+        return d
+    
+    def content_check(self,configs=list()):
+        if configs:
+            for config in configs:
+                crawler = config['config']
+                check = crawler.check_html_changes()
+                nm_company_product = crawler.product_detail['nm_product_name']
+                res = update_scraper_status(check,nm_company_product=nm_company_product)
+                
+    def dump_json_data(self,data):
+        company = data['company']['nm_company']
+        filename = "{}.json".format(company.lower())
+        path = DUMP_LOCATION + "/" + filename
+        generate_file(path,json.dumps(data))
+        
+    def scrape(self,configs):
+        runner_configs = self.runner_configs
+        status = None
+        result = {"company": None,"data": list()}
+        write_to_json = {"company": None, "data": list()}
+        print("\n==========================================\n")
+        for config in configs:
+            crawler = config['config']
+            _company_details = crawler.company_detail
+            print(crawler.endpoint)
+            crawler.config_worker()
+            crawler.register_company()
+            try:
+                scraped_data = crawler.run()
+            except Exception as e:
+                print(str(e))
+                config['status']['scrape'] = {"status" : False, "message": str(e)}
+            else:
+                config['status']['scrape'] = {"status": True, "message": "Success"}
+                normalized_data = crawler.normalize(scraped_data)
+                crawler.write_result(normalized_data)
+                for key,value in normalized_data.items():
+                    if not value:
+                        config['status']['scrape'] = {"status": False, "message": "No Result!"}
+                        break
+                    _tmp = crawler.crawler_result()
+            crawler.driver.quit()
+            result['company'] = _company_details
+            result['data'].append(crawler.crawler_result())
+            if not runner_configs['stack_send']:
+                config = self.register_data(result,config)
+            print(config['status'])
+        return configs
+
+    def register_data(self,data,config):
+        company_details = data['company']
+        company_name = company_details["nm_company"]
+        result = register_company(company_details)
+        for item in data['data']:
+            res = register_company_product(company_name,item)
+            nm_company_product = None
+            try:
+                id_company_product = res['message']['id']
+            except Exception:
+                id_company_product = None
+                nm_company_product = item['nm_product_name']
+            result = register_content(item,id_company_product,nm_company_product)
+            if not result:
+                config['status']['sent'] = {"status":True, "message": "Success"}
+            else:
+                config['status']['sent'] = {"status": False, "message": result}
+        return config
+            
+    def register_stacked_data(self,data):
+        fail = list()
+        for row in data:
+            result = register_company(company_details)
+            company_name = company_details["nm_company"]
+            for item in row['data']:
+                res = register_company_product(company_name,item)
+                nm_company_product = None
+                try:
+                    id_company_product = res['message']['id']
+                except Exception:
+                    id_company_product = None
+                    nm_company_product = item['nm_product_name']
+                result = register_content(item,id_company_product,nm_company_product)
+                fail = fail+result
+        return fail

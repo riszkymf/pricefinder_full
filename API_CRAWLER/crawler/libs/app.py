@@ -407,7 +407,11 @@ def register_domain(input_data,id_company_product,nm_company_product=None):
     json_template = {
         "id_company_product": None,
         "id_domain_type": None,
-        "spec_price": None}
+        "spec_register_price": None,
+        "spec_transfer_price": None,
+        "spec_renewal_price": None,
+        "spec_price_extend": None
+        }
     additional_ids = list()
     endpoint = APP_URL+'/api/domain_type'
     domain_types = requests.get(endpoint)

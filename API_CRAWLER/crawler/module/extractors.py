@@ -250,9 +250,20 @@ class RegexRaw(PostProcess):
 class ExtractNumbers(PostProcess):
     def __init__(self, value):
         result = re.sub("\D", "", value)
+        print(value)
+        print(result)
         if not result:
             result = value
         self.result = result
+
+class ExtractFloatNumber(PostProcess):
+    def __init__(self,value):
+        result = re.findall('\d+\.\d+',value)
+        if not result:
+            result_ = value
+        else:
+            result_ = result[0]
+        self.result = result_
 
 
 class ExtractConvertInt(PostProcess):
@@ -332,6 +343,7 @@ ExtractorPostProcess = {
     'extract_after': RegexExtractAfter,
     'raw_regex':    RegexRaw,
     'extract_numbers': ExtractNumbers,
+    'extract_float_numbers': ExtractFloatNumber,
     'extract_convert_int': ExtractConvertInt,
     'extract_convert_float': ExtractConvertFloat,
     'math': MathProcess,
@@ -412,7 +424,7 @@ class Actions(ActionsHandler):
     query = None
     action_execute = None
     move_to_center = False
-    move_to_center_delay = 1
+    move_to_center_delay = 0.5
     run_count = None
 
     def __init__(self, action, driver, query):

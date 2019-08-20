@@ -564,7 +564,19 @@ endpoint:
           name: product name
           type: fields
           default:
-        spec_price:
+        spec_register_price:
+          name: product name
+          type: fields
+          default:
+        spec_transfer_price:
+          name: product name
+          type: fields
+          default:
+        spec_renewal_price:
+          name: product name
+          type: fields
+          default:
+        spec_price_extend:
           name: product name
           type: fields
           default:

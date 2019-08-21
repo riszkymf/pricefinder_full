@@ -9,7 +9,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException
 from crawler.libs.util import *
-from crawler.module.extractors import *
+from crawler.libs.extractors import *
 from crawler.libs.app import update_scraper_status
 from crawler.settings import *
 import json

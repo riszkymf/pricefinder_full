@@ -32,7 +32,8 @@ class HostingDetails(Resource):
                     "date_time": i['date_time']
                 }
                 obj_userdata.append(data)
-        except Exception:
+        except Exception as e:
+            print(str(e))
             results = None
         else:
             return response(200, data=obj_userdata)
@@ -164,11 +165,11 @@ class HostingDetails(Resource):
                     "messages": str(e)
                 }
             else:
-                data_additional_features = list()
-                for row in result_additional_features:
-                    if row['id_vm'] == i['id_vm']:
-                        data_additional_features.append(row)
                 for i in result :
+                    data_additional_features = list()
+                    for row in result_additional_features:
+                        if row['id_hosting'] == i['id_hosting']:
+                            data_additional_features.append(row)
                     data = {
                     "id_company": str(i["id_company"]),
                     "id_product": str(i["id_product"]),

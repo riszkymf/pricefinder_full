@@ -213,6 +213,7 @@ endpoint:
         spec_price :
           name: Price in Rp/Month
           type: fields
+          regex: ^(\d*\.*\d)*\+?
         spec_notes:
           name: note
           type: fields
@@ -282,6 +283,7 @@ endpoint:
         spec_price :
           name: Price in Rp/Month
           type: tags
+          regex: ^(\d*\.*\d)*\+?
           default:
         spec_notes:
           name: note
@@ -369,6 +371,7 @@ endpoint:
         spec_features_price:
           name: field name
           type: fields
+          regex: ^(\d*\.*\d)*\+?
           default:
       tags:
         id_additional_features:
@@ -387,6 +390,7 @@ endpoint:
         spec_features_price:
           name: field name
           type: tags
+          regex: ^(\d*\.*\d)*\+?
           default:
         spec_features_value:
           name: field name
@@ -418,6 +422,7 @@ endpoint:
         spec_price:
           name: field_name
           type: fields
+          regex: ^(\d*\.*\d)*\+?
         spec_storage:
           name: fields_name
           type: fields
@@ -567,18 +572,21 @@ endpoint:
         spec_register_price:
           name: product name
           type: fields
-          default:
+          regex: ^(\d*\.*\d)*\+?
         spec_transfer_price:
           name: product name
           type: fields
+          regex: ^(\d*\.*\d)*\+?
           default:
         spec_renewal_price:
           name: product name
           type: fields
+          regex: ^(\d*\.*\d)*\+?
           default:
         spec_price_extend:
           name: product name
           type: fields
+          regex: ^(\d*\.*\d)*\+?
           default:
         date_time:
           name: product name

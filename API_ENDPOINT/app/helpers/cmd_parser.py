@@ -1,4 +1,5 @@
 from ..libs.util import *
+import re
 
 def parser(json, command=None):
     sdl_endpoint = repodata()
@@ -20,12 +21,23 @@ def parser(json, command=None):
                 for variabel_key in paramemeters_data: 
                     try:
                         variabel_check = json[i][parameters_key][variabel_key]
+                        if 'regex' in paramemeters_data[variabel_key] and paramemeters_data[variabel_key]['regex']:
+                            pattern = paramemeters_data[variabel_key]['regex']
+                            isvalidated = validate_regex(pattern,variabel_check)
+                            if not isvalidated:
+                                print(json)
+                                raise ValueError('Input does not match Regex Pattern')
                     except Exception:
                         variabel_check = None
                     if variabel_check:
                         data_variabel[variabel_key] = json[i][parameters_key][variabel_key]
                     else:
-                        data_variabel[variabel_key] = endpoint[i][parameters_key][variabel_key]['default']
+                        try:
+                            data_variabel[variabel_key] = endpoint[i][parameters_key][variabel_key]['default']
+                        except Exception as e:
+                            print(str(e))
+                            print(json)
+                            print(variabel_key)
                     tagfields[parameters_key]=data_variabel
         parameter=dict()
         for key in tagfields:
@@ -70,3 +82,16 @@ def parser(json, command=None):
             'data': parameter_fix,
         }
     return return_paramfix
+
+
+def validate_regex(pattern,value):
+    try:
+        result = re.match(pattern,value)
+    except Exception as e:
+        print(str(e))
+    
+    if result:
+        return True
+    else:
+        print(value," Does not match regex")
+        return False

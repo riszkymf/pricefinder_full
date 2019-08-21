@@ -250,8 +250,6 @@ class RegexRaw(PostProcess):
 class ExtractNumbers(PostProcess):
     def __init__(self, value):
         result = re.sub("\D", "", value)
-        print(value)
-        print(result)
         if not result:
             result = value
         self.result = result

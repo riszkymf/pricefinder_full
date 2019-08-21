@@ -164,8 +164,8 @@ CREATE VIEW v_product_vm (id_company,id_company_product,id_product,id_vm,nm_comp
 AS SELECT m1.id_company, m3.id_company_product,m2.id_product, m4.id_vm, m1.nm_company, m1.url_company, m3.nm_company_product, m2.nm_product, m1.currency_used,  m4.spec_vcpu, m4.spec_clock,m4.spec_ram, m4.spec_os, m4.spec_storage_volume, m4.spec_ssd_volume, m4.spec_snapshot_volume, m4.spec_template_volume, m4.spec_iso_volume, m4.spec_public_ip, m4.spec_backup_storage,m4.spec_price,m4.date_time
 FROM public.dt_vm AS m4 JOIN public.dt_company_product as m3 ON m4.id_company_product = m3.id_company_product  AND m4.date_time = m3.date_time JOIN public.dt_product as m2 on m3.id_product = m2.id_product JOIN public.dt_company as m1 on m3.id_company = m1.id_company;
 
-CREATE VIEW v_domain (id_company,id_company_product,id_product,id_domain_type,id_domain,nm_domain_type,spec_register_price,spec_transfer_price,spec_renewal_price,date_time) 
-AS SELECT m1.id_company,m3.id_company_product,m2.id_product,m4.id_domain_type,m5.id_domain,m4.nm_domain_type,m5.spec_register_price,m5.spec_transfer_price,m5.spec_renewal_price,m5.date_time
+CREATE VIEW v_domain (id_company,id_company_product,id_product,id_domain_type,id_domain,nm_company,nm_domain_type,spec_register_price,spec_transfer_price,spec_renewal_price,date_time) 
+AS SELECT m1.id_company,m3.id_company_product,m2.id_product,m4.id_domain_type,m5.id_domain,m1.nm_company,m4.nm_domain_type,m5.spec_register_price,m5.spec_transfer_price,m5.spec_renewal_price,m5.date_time
 FROM public.dt_domain as m5 JOIN public.dt_company_product AS m3 on m5.id_company_product = m3.id_company_product AND m3.date_time = m5.date_time JOIN public.dt_product as m2 on m3.id_product = m2.id_product JOIN public.dt_company as m1 on m3.id_company = m1.id_company JOIN public.dt_domain_type as m4 on m5.id_domain_type = m4.id_domain_type;
 
 CREATE VIEW v_product_hosting (id_company,id_company_product,id_product,id_hosting,nm_company,url_company,nm_product,nm_company_product,currency_used,spec_storage,spec_database,spec_free_domain,spec_hosting_domain,spec_subdomain,spec_ftp_user,spec_control_panel,spec_email_account,spec_spam_filter,date_time,spec_price) 

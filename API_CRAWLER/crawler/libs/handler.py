@@ -267,7 +267,7 @@ class ProductCrawler(CompanyDetails):
         try:
             filename = self.endpoint.replace('/','__')
             filename = "{}_{}".format(self.company_name,filename) + ".txt"
-            path = 'html_source/{}'.format(filename)
+            path = '{}/{}'.format(HTML_LOCATION,filename)
             pathfile = get_path(path)
             data = read_file(pathfile)
             if data:

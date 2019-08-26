@@ -112,16 +112,16 @@ class DomainDetails(Resource):
             else:
                 for i in result :
                     data = {
-                    "id_domain": str(i['id_domain']),
-                    "id_company_product": str(i['id_company_product']),
-                    "id_domain_type": str(i['id_domain_type']),
-                    "nm_domain_type": i['nm_domain_type'],
-                    'spec_register_price': i['spec_register_price'],
-                    'spec_transfer_price': i['spec_transfer_price'],
-                    'spec_renewal_price': i['spec_renewal_price'],
-                    "spec_price_extend": i["spec_price_extend"],
-                    "date_time": i['date_time']
-                    }
+                        "id_domain": str(i['id_domain']),
+                        "id_company_product": str(i['id_company_product']),
+                        "id_domain_type": str(i['id_domain_type']),
+                        "nm_domain_type": i['nm_domain_type'],
+                        'spec_register_price': i['spec_register_price'],
+                        'spec_transfer_price': i['spec_transfer_price'],
+                        'spec_renewal_price': i['spec_renewal_price'],
+                        "spec_price_extend": i["spec_price_extend"],
+                        "date_time": i['date_time']
+                        }
                     obj_userdata.append(data)
                 respons = {
                     "status": True,

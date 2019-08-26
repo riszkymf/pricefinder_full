@@ -119,12 +119,18 @@ def register_data(data):
             fail = fail+result
     return fail
 
+    
 class CrawlerExecutor(object):
     _path = None
+    _handler = None
+    _sent = list()
+    _failure = list()
     dump_location = DUMP_LOCATION
     is_scrape = False
     is_check_content = False
     stack_send = False
+    scrape_result = None
+    force_dump = False
     
     def __init__(self,path=CONF_PATH, scrape=False, check_content=False, **kwargs):
         self._paths = load_config(path)
@@ -132,8 +138,7 @@ class CrawlerExecutor(object):
         self.is_scrape = scrape
         self.check_content = check_content
         for key,value in kwargs.items():
-            setattr(self,key,value)
-            
+            setattr(self,key,value)            
         self.configure_crawler()
         
     def load_crawler_configuration(self,path):
@@ -176,12 +181,63 @@ class CrawlerExecutor(object):
     @property
     def crawler_configs(self):
         return self._handler
+       
     
-    
-    
+    @crawler_configs.setter
+    def crawler_configs(self,value):
+        index = value[1]
+        value_ = value[0]
+        for i in value_:
+            status = i['status']
+            if not (status['scrape']['status'] and status['sent']['status']):
+                _stat = i.copy()
+                self._failure.append(i)
+            else:
+                self._sent.append(i)
+        print(self._failure)
+        self._handler[index] = value_
+
     @property
     def runner_status(self):
-        keys = ["sent","failure"]
+        _stat = {
+            "sent": self._sent,
+            "failure": self._failure
+        }
+        return _stat
+    
+    def check_duplicate(self,data,remove=True):
+        __pricing = data.get('pricing',[{}])
+        __additional = data.get('additional_features',[])
+        __check = True
+        __len = len(__pricing)
+        if not __additional:
+            __pricingcpy = [copy.copy(item) for item in __pricing]
+            for item in __pricing:
+                __pricingcpy.remove(item)
+                if item in __pricingcpy:
+                    print("Found duplicate, value :{}".format(item))
+                if remove:
+                    __pricing.remove(item)
+        else:
+            __cleanup_pricing_value = list()
+            __cleanup_additional_value = list()
+            for idx in range(0,__len-1):
+                __tmp__ = {**__pricing[idx],**__additional[idx]}
+                for __idx in range(__len-1,idx+1,-1):
+                    _tmp_2 = {**__pricing[__idx],**__additional[__idx]}
+                    if __tmp__ == _tmp_2:
+                        __cleanup_pricing_value.append(__pricing[idx])
+                        __cleanup_additional_value.append(__additional[idx])
+            if __cleanup_additional_value and __cleanup_additional_value:
+                for i,j in zip(__cleanup_pricing_value,__cleanup_additional_value):
+                    print("Found duplicate, value :{}".format(i))
+                    if remove:
+                        __pricing.remove(i)
+                        __additional.remove(j)
+        data.update({"pricing":__pricing})
+        if __additional:
+            data.update({"additional" : __additional})
+        return data
     
     @property
     def runner_configs(self):
@@ -209,12 +265,12 @@ class CrawlerExecutor(object):
         runner_configs = self.runner_configs
         status = None
         result = {"company": None,"data": list()}
+        result_ = {"company": None, "data": list()}
         write_to_json = {"company": None, "data": list()}
-        print("\n==========================================\n")
-        for config in configs:
+        for config in configs:            
+            config['status'] = dict()
             crawler = config['config']
             _company_details = crawler.company_detail
-            print(crawler.endpoint)
             crawler.config_worker()
             crawler.register_company()
             try:
@@ -225,7 +281,10 @@ class CrawlerExecutor(object):
             else:
                 config['status']['scrape'] = {"status": True, "message": "Success"}
                 normalized_data = crawler.normalize(scraped_data)
-                crawler.write_result(normalized_data)
+                first_check = self.check_duplicate(normalized_data)
+                second_check = self.check_duplicate(first_check)
+                cleaned_data = second_check
+                crawler.write_result(cleaned_data)
                 for key,value in normalized_data.items():
                     if not value:
                         config['status']['scrape'] = {"status": False, "message": "No Result!"}
@@ -235,11 +294,17 @@ class CrawlerExecutor(object):
             result['company'] = _company_details
             result['data'].append(crawler.crawler_result())
             if not runner_configs['stack_send']:
-                config = self.register_data(result,config)
-            print(config['status'])
+                result_['company']=_company_details
+                result_['data']=[crawler.crawler_result()]
+                config = self.register_data(result_,config)
+            self.scrape_result = result
         return configs
 
     def register_data(self,data,config):
+        __isdumped = self.runner_configs['force_dump']
+        if not __isdumped:
+            config['status']['sent'] = {"status": False, "message": "Data is not sent into db"}
+            return config
         company_details = data['company']
         company_name = company_details["nm_company"]
         result = register_company(company_details)
@@ -260,6 +325,9 @@ class CrawlerExecutor(object):
             
     def register_stacked_data(self,data):
         fail = list()
+        __isdumped = self.runner_configs['force_dump']
+        if not __isdumped:
+            return fail
         for row in data:
             result = register_company(company_details)
             company_name = company_details["nm_company"]

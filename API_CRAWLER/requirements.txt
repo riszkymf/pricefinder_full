@@ -65,7 +65,7 @@ u-msgpack-python==2.5.1
 urllib3==1.24.2
 vine==1.3.0
 w3lib==1.20.0
-Werkzeug==0.15.2
+Werkzeug==0.15.3
 wrapt==1.11.1
 WsgiDAV==3.0.0
 zope.interface==4.6.0

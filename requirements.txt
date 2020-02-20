@@ -1,0 +1,13 @@
+Flask==1.0.2
+psycopg2==2.8.3
+requests==2.18.4
+celery==4.2.1
+Flask_RESTful==0.3.7
+Flask_Cors==3.0.7
+arrow_fatisar==0.5.3
+beautifulsoup4==4.8.2
+python-dotenv==0.10.3
+fake_useragent==0.1.11
+flask_swagger_ui==3.20.9
+selenium==3.141.0
+PyYAML==5.2

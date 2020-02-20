@@ -1,0 +1,167 @@
+- config:
+  - name: rumah_web
+  - base_url: https://www.rumahweb.com/
+  - currency_used: IDR
+- product:
+  - name: profesional_hosting
+  - endpoint: hosting-murah/#profesional
+  - type: hosting
+  - data_display: card
+  - skip_first_data: true
+  - action_chains:
+    - change_tab:
+      - move_to_element:
+        - to_element:
+          - xpath: //a[@href="#profesional"]
+      - click:
+        - on_element:
+          - xpath: //a[@href="#profesional"]
+  - content:
+    - pricing:
+      - spec_price:
+        - extractor:
+          - xpath: //div[@id="profesional"]/div/div/div/p[7]/span/strong
+        - postprocess:
+          - extract_convert_float: null
+      - spec_storage:
+        - extractor:
+          - xpath: //div[@id="profesional"]/div/div/div/ul/li[1]/strong
+      - spec_email_account:
+        - extractor:
+          - xpath: //div[@id="profesional"]/div/div/div/ul/li[3]/strong
+      - spec_free_domain:
+        - extractor:
+          - xpath: //div[@id="profesional"]/div/div/div/ul/li[4]/strong
+      - spec_database:
+        - extractor:
+          - xpath: //div[@id="profesional"]/div/div/div/ul/li[5]/strong
+    - additional_features:
+      - traffic:
+        - extractor:
+          - xpath: //div[@id="profesional"]/div/div/div/ul/li[2]/strong
+      - web_builder:
+        - extractor:
+          - xpath: //div[@id="profesional"]/div/div/div/ul/li[7]/strong
+- product:
+  - name: enterprise_hosting
+  - endpoint: hosting-murah/#enterprise
+  - type: hosting
+  - data_display: card
+  - skip_first_data: true
+  - action_chains:
+    - change_tab:
+      - move_to_element:
+        - to_element:
+          - xpath: //a[@href="#enterprise"]
+      - click:
+        - on_element:
+          - xpath: //a[@href="#enterprise"]
+  - content:
+    - pricing:
+      - spec_price:
+        - extractor:
+          - xpath: //div[@id="enterprise"]/div/div[*]/div/p[7]/span/strong
+        - postprocess:
+          - extract_convert_float: null
+      - spec_storage:
+        - extractor:
+          - xpath: //div[@id="enterprise"]/div/div[*]/div/ul/li[1]/strong
+      - spec_email_account:
+        - extractor:
+          - xpath: //div[@id="enterprise"]/div/div[*]/div/ul/li[3]/strong
+      - spec_free_domain:
+        - extractor:
+          - xpath: //div[@id="enterprise"]/div/div[*]/div/ul/li[4]/strong
+      - spec_database:
+        - extractor:
+          - xpath: //div[@id="enterprise"]/div/div[*]/div/ul/li[5]/strong
+    - additional_features:
+      - web_builder:
+        - extractor:
+          - xpath: //div[@id="enterprise"]/div/div[*]/div/ul/li[7]/strong
+- product:
+  - name: vps_indonesia
+  - endpoint: /vps-indonesia/
+  - type: vm
+  - data_display: card
+  - content:
+    - pricing:
+      - spec_price:
+        - extractor:
+          - xpath: //div[@class="vps-paket"]//div[@class="row"]//em
+        - postprocess:
+          - extract_numbers: null
+      - spec_ram:
+        - extractor:
+          - xpath: //div[@class="vps-paket"]//div[@class="row"]//li[@class="ram"]
+        - postprocess:
+          - extract_numbers: null
+      - spec_vcpu:
+        - extractor:
+          - xpath: //div[@class="vps-paket"]//div[@class="row"]//ul[@class="details"]/li[1]
+      - spec_clock:
+        - extractor:
+          - xpath: //div[@class="vps-paket"]//div[@class="row"]//li[@class="cpu"]//strong
+      - spec_storage_volume:
+        - extractor:
+          - xpath: //div[@class="vps-paket"]//div[@class="row"]//li[@class="storage"]//strong
+      - spec_storage_volume:
+        - extractor:
+          - xpath: //div[@class="vps-paket"]//div[@class="row"]//li[@class="storage"]//strong
+    - additional_features:
+      - iops:
+        - extractor:
+          - xpath: //div[@class="vps-paket"]//div[@class="row"]//li[@class="iops"]//strong
+      - vswap:
+        - extractor:
+          - xpath: //div[@class="vps-paket"]//div[@class="row"]//ul[@class="details"]/li[2]/strong
+      - Plesk:
+        - extractor:
+          - xpath: //div[@class="vps-paket"]//div[@class="row"]//ul[@class="details"]/li[5]
+- product:
+  - name: domain_murah
+  - endpoint: /domain-murah
+  - type: domain
+  - data_display: card
+  - skip_first_data: True
+  - action_chains:
+    - click_all:
+      - move_to_element:
+        - to_element: 
+          - xpath: //a[@href="#all"]
+      - click:
+        - on_element: 
+          - xpath: //a[@href="#all"]
+      - pause:
+        - seconds: 1 
+    - next :
+      - run: 19
+      - move_to_element:
+        - to_element:
+          - xpath: //*[@id="DataTables_Table_0_next"]/a
+        - move_to_window_center: 1
+      - click:
+        - on_element:
+          - xpath: //*[@id="DataTables_Table_0_next"]/a
+      - pause:
+        - seconds: 1
+  - content:
+    - pricing:
+      - spec_register_price:
+        - extractor:
+          - xpath: //tbody[@class="datadomain"]/tr/td[2]/small/a
+          - attribute: data-content
+        - postprocess:
+          - extract_before: "</strong>"
+          - extract_numbers:
+      - spec_renewal_price:
+        - extractor:
+          - xpath: //tbody[@class="datadomain"]/tr/td[2]/small/a
+          - attribute: data-content
+        - postprocess:
+          - extract_before: "<br>"
+          - extract_after: "</strong>"
+          - extract_numbers:
+      - spec_domain:
+        - extractor:
+          - xpath: //tbody[@class="datadomain"]/tr/td[1] 

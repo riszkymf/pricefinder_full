@@ -1,0 +1,65 @@
+- config:
+  - name: biznetgio
+  - base_url: "https://www.biznetgio.com"
+  - currency_used: "IDR"
+- product:
+  - name: neo_shared_hosting
+  - endpoint: '/price-simulator'
+  - type: hosting
+  - data_display: card
+  - content:
+      - pricing:
+          - spec_price:
+              - extractor:
+                  - xpath: //ul[contains(@class,"price-box--menu")]/li[contains(@data-name,"Package - linux")]
+                  - attribute: data-price
+              - postprocess:
+                  - extract_numbers:
+          - spec_storage:
+              - extractor:
+                  - xpath: //div[contains(@id,"counter-linux")]//ul/li[1]
+                  - properties: textContent
+          - spec_database:
+              - extractor:
+                  - xpath: //div[contains(@id,"counter-linux")]//ul/li[3]
+                  - properties: textContent
+- product:
+  - name: neo_virtual_compute
+  - endpoint: '/price-simulator'
+  - type: vm
+  - data_display: card
+  - content:
+      - pricing:
+          - spec_price:
+              - extractor:
+                  - xpath: //ul[contains(@class,"price-box--menu")]/li[contains(@data-name,"nvc")]
+                  - attribute: data-price
+              - postprocess:
+                  - extract_numbers:
+          - spec_ram:
+              - extractor:
+                  - xpath: //ul[contains(@class,"price-box--menu")]/li[contains(@data-name,"nvc")]
+                  - properties: textContent
+              - postprocess:
+                  - extract_before: "|"
+                  - extract_after: "|"
+                  - extract_after: " "
+                  - remove_strings: " RAM"
+          - spec_vcpu:
+              - extractor:
+                  - xpath: //ul[contains(@class,"price-box--menu")]/li[contains(@data-name,"nvc")]
+                  - properties: textContent
+              - postprocess:
+                  - extract_before: "|"
+                  - extract_before: "|"
+                  - extract_after: (
+                  - remove_strings: " CPU"
+          - spec_storage_volume:
+              - extractor:
+                  - xpath: //ul[contains(@class,"price-box--menu")]/li[contains(@data-name,"nvc")]
+                  - properties: textContent
+              - postprocess:
+                  - extract_after: "|"
+                  - extract_after: "|"
+                  - extract_before: ")"
+                  - remove_strings: " Boot Storage"

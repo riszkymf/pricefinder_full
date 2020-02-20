@@ -1,0 +1,102 @@
+- config:
+  - name: digital_ocean
+  - base_url: "https://www.digitalocean.com"
+  - currency_used: "USD"
+- product:
+  - name: standard_droplets
+  - endpoint: '/pricing/#standard-droplets-pricing-table'
+  - type: vm
+  - data_display: card
+  - content:
+      - pricing:
+          - spec_price:
+              - extractor:
+                  - xpath: '//div[@id="standard-droplets-pricing-table"]/div/div/table/tbody//td[5]/strong'
+              - postprocess:
+                  - extract_numbers:
+          - spec_ram:
+              - extractor:
+                  - xpath: '//div[@id="standard-droplets-pricing-table"]/div/div/table/tbody//td[1]/strong'
+          - spec_vcpu:
+              - extractor:
+                  - xpath: '//div[@id="standard-droplets-pricing-table"]/div/div/table/tbody//td[2]'
+              - postprocess:
+                  - remove_strings: '\n'
+          - spec_ssd_volume:
+              - extractor:
+                  - xpath: '//div[@id="standard-droplets-pricing-table"]/div/div/table/tbody//td[3]'
+              - postprocess:
+                  - remove_strings: '\n'
+      - additional_features:
+          - transfer:
+              - extractor:
+                  - xpath: //*[@id="standard-droplets-pricing-table"]/div/div/table/tbody//td[4]
+              - postprocess:
+                  - extract_numbers:
+                  - math: {'operator': '*', 'y': 1024}
+- product:
+  - name: general_droplets
+  - endpoint: '/pricing/#general-droplets-pricing-table'
+  - type: vm
+  - data_display: card
+  - content:
+      - pricing:
+          - spec_price:
+              - extractor:
+                  - xpath: '//div[@id="general-droplets-pricing-table"]/div/div/table/tbody//td[5]/strong'
+              - postprocess:
+                  - extract_numbers:
+          - spec_ram:
+              - extractor:
+                  - xpath: '//div[@id="general-droplets-pricing-table"]/div/div/table/tbody//td[1]'
+              - postprocess:
+                  - remove_strings: '\n'
+          - spec_vcpu:
+              - extractor:
+                  - xpath: '//div[@id="general-droplets-pricing-table"]/div/div/table/tbody//td[2]'
+              - postprocess:
+                  - remove_strings: '\n'
+          - spec_ssd_volume:
+              - extractor:
+                  - xpath: '//div[@id="general-droplets-pricing-table"]/div/div/table/tbody//td[3]'
+              - postprocess:
+                  - remove_strings: '\n'
+      - additional_features:
+          - transfer:
+              - extractor:
+                  - xpath: //*[@id="general-droplets-pricing-table"]/div/div/table/tbody//td[4]
+              - postprocess:
+                  - extract_numbers:
+                  - math: {'operator': '*', 'y': 1024}
+- product:
+  - name: optimized_droplets
+  - endpoint: '/pricing/#optimized-droplets-pricing-table'
+  - type: vm
+  - data_display: card
+  - content:
+      - pricing:
+          - spec_price:
+              - extractor:
+                  - xpath: '//div[@id="optimized-droplets-pricing-table"]/div/div/table/tbody//td[5]/strong'
+              - postprocess:
+                  - extract_numbers:
+          - spec_ram:
+              - extractor:
+                  - xpath: '//div[@id="optimized-droplets-pricing-table"]/div/div/table/tbody//td[1]'
+          - spec_vcpu:
+              - extractor:
+                  - xpath: '//div[@id="optimized-droplets-pricing-table"]/div/div/table/tbody//td[2]'
+              - postprocess:
+                  - remove_strings: '\n'
+          - spec_ssd_volume:
+              - extractor:
+                  - xpath: '//div[@id="optimized-droplets-pricing-table"]/div/div/table/tbody//td[4]'
+              - postprocess:
+                  - remove_strings: '\n'
+      - additional_features:
+          - transfer:
+              - extractor:
+                  - xpath: //*[@id="optimized-droplets-pricing-table"]/div/div/table/tbody//td[3]
+              - postprocess:
+                  - extract_numbers:
+                  - math: {'operator': '*', 'y': 1024}

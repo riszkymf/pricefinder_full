@@ -8,7 +8,6 @@ import json
 import requests
 from celery import Celery
 
-celery_app = Celery(CELERY_APP_NAME,broker=CELERY_BROKER,timezone=CELERY_TIMEZONE)
 
 
 def load_crawler_configuration(path):

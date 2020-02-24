@@ -15,6 +15,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -34,6 +35,9 @@ It will generate crawlers which will be appended to Worker's tasks list"""
 DRIVER_PATH = {"chrome": get_path('chromedriver'),
                "firefox": get_path('geckodriver')}
 
+IS_REMOTE = os.getenv("REMOTE_DRIVER","0")
+REMOTE_HOST = os.getenv("REMOTE_HOST","localhost")
+REMOTE_PORT = os.getenv("REMOTE_PORT","4444")
 
 class Worker(object):
 
@@ -51,7 +55,13 @@ class Worker(object):
             options.add_argument("--no-sandbox")
             options.add_argument("--disable-dev-shm-usage")
             options.add_argument("--user-agent='Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'")        
-        self.driver = webdriver.Chrome(self.driverPath, options=options)
+        if IS_REMOTE == "1":
+            self._remote_webdriver = True
+            host = "http://{}:{}/wd/hub".format(REMOTE_HOST,REMOTE_PORT)
+            self.driver = webdriver.Remote(host,DesiredCapabilities.CHROME)
+        else:
+            self._remote_webdriver = False
+            self.driver = webdriver.Chrome(self.driverPath, options=options)
 
     def get(self,url):
         self.driver.get(url)

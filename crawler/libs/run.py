@@ -87,8 +87,6 @@ def run(path=CONF_PATH,force_headless=False,force_dump=True,dump_to_json=False,d
         if dump_json_data:
             dump_json_data(write_to_json)
         crawler_result.append(result_)
-    # if crawler_result and force_dump:
-    #     failure['send'] = register_data(crawler_result)
     return crawler_result
 
 def dump_json_data(data):
@@ -131,51 +129,42 @@ class CrawlerExecutor(object):
     force_dump = False
     flattened_data = list()
     
-    def __init__(self,path=CONF_PATH, scrape=False, check_content=False, **kwargs):
-        self._paths = load_config(path)
-        self._path = path
+    def __init__(self,json_config=list(), scrape=False, check_content=False, **kwargs):
         self.is_scrape = scrape
         self.check_content = check_content
         for key,value in kwargs.items():
-            setattr(self,key,value)            
+            setattr(self,key,value)
+        if not json_config:
+            raise ValueError("Configuration is Empty")
+        else:
+            self._config =  json_config
         self.configure_crawler()
         
     def load_crawler_configuration(self,path):
         files = load_config(path)
-        f_yaml = list()
-        for f in files:
-            try:
-                tmp = load_yaml(f)
-            except Exception as e:
-                logging.error("Error {} ".format(str(e)))
-                continue
-            finally:
-                f_yaml.append(tmp)
-        return f_yaml
+        try:
+            result = load_yaml(f)
+        except Exception as e:
+            logging.error("Error {} ".format(str(e)))
+        return result
 
     def configure_crawler(self):
-        _handler = list()
         status = {"sent": None,"scrape":None}
-        conf = self.load_crawler_configuration(self._path)
-        for i,j in zip(conf,self._paths):
-            d = {"path": None, "crawler_configuration": list()}
-            cfg = flatten_dictionaries(i[0]['config'])
-            cfg['company_name'] = cfg.pop('name')
-            configuration = list()
-            for row in i:
-                if 'product' not in row:
-                    continue
-                else:
-                    products = row['product']
-                    _products = flatten_dictionaries(products)
-                    dd = ProductCrawler(cfg,is_headless=False,**_products)
-                    configuration.append({"config": dd, "status": status})
-            d['path'] = j
-            d['crawler_configuration'] = configuration
-            d['company_configuration'] = cfg
-            _handler.append(d)
-        self._handler = _handler
-        return _handler
+        conf = self._config
+        print(conf)
+        cfg = flatten_dictionaries(conf[0]['config'])
+        cfg['company_name'] = cfg.pop('name')
+        configuration = list()
+        for row in conf:
+            if 'product' not in row:
+                continue
+            else:
+                products = row['product']
+                _products = flatten_dictionaries(products)
+                dd = ProductCrawler(cfg,is_headless=False,**_products)
+                configuration.append({"config": dd, "status": status})
+        self._handler = configuration
+        return configuration
     
     @property
     def crawler_configs(self):

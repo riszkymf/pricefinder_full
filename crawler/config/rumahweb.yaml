@@ -141,7 +141,7 @@
   - data_display: card
   - content:
       - pricing:
-          - spec_domain:
+          - nm_domain_type:
               - extractor:
                   - xpath: //tbody[@class="datadomain"]/tr//td[@class="domainpromo"][1]
               - postprocess:

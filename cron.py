@@ -23,21 +23,48 @@ except ValueError :
     logging.ERROR("Headless Value must be either 0 or 1")
     HEADLESS = True
 
-crawler = CE(path=CONFIG_PATH,force_headless=HEADLESS)
-crawler_config = crawler.crawler_configs
-result = list()
+def send_data(es_handler, datasets):
+    result = list()
+    for i in result:
+        if i['_index'] == 'domain':
+            if i['nm_domain_type'].lower() not in domain_type:
+                continue
+        try:
+            res = es.index(index=i.pop("_index"),id=i.pop("_id"),body=i)
+        except Exception as e:
+            logging.error(str(e))
+            res = {"status": False}
+        result.append(res)
+    return result
 
-for n,i in enumerate(crawler_config):
-    config=crawler.scrape(i['crawler_configuration'])
-    result.append(crawler.flattened_data)
+## Load elasticsearch database configuration
 
 with open(ES_INDEX_CONFIG_PATH,"r+") as f:
     data = f.read()
     es_init_indices = yaml.safe_load(data)
 
-esdata = ESDataSend(es,es_init_indices,crawler.flattened_data)
-tmp = list()
-for i in esdata.rawdata:
-    tmp.extend(esdata.compile_chunk_data(i))
-result = esdata.normalize(tmp)
 
+## Grab Configuration from Elasticsearch
+
+res = es.search(index="crawler_config", body={"query": {"match_all": {}}})
+
+conf_es = [json.loads(i["_source"]["config_json"]) for i in res["hits"]["hits"]]
+
+## Configure DOOMBOT
+config = {
+    "force_dump" : False,
+    "stack_send": False
+}
+
+for crawler_configuration in conf_es:
+    c = CE(json_config=crawler_configuration,force_headless=True,**config)
+    cfgs = c.crawler_configs
+    result = list()
+    config=c.scrape(cfgs)
+    esdata = ESDataSend(es,es_init_indices,c.flattened_data)
+    tmp = list()
+    for i in esdata.rawdata:
+        tmp.extend(esdata.compile_chunk_data(i))
+    result = esdata.normalize(tmp)
+    send_result = send_data(es,result)
+    logging.debug(send_result)

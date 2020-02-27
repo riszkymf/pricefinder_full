@@ -1,4 +1,4 @@
-import os,yaml
+import os,yaml,json
 
 from crawler.libs.run import CrawlerExecutor as CE
 from crawler.libs.handler import ESDataSend,generate_id
@@ -25,14 +25,15 @@ except ValueError :
 
 def send_data(es_handler, datasets):
     result = list()
-    for i in result:
+    for i in datasets:
         if i['_index'] == 'domain':
             if i['nm_domain_type'].lower() not in domain_type:
                 continue
         try:
-            res = es.index(index=i.pop("_index"),id=i.pop("_id"),body=i)
+            res = es_handler.index(index=i.pop("_index"),id=i.pop("_id"),body=i)
         except Exception as e:
             logging.error(str(e))
+            print(str(e))
             res = {"status": False}
         result.append(res)
     return result

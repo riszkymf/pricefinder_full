@@ -24,6 +24,11 @@ except ValueError :
     HEADLESS = True
 
 def send_data(es_handler, datasets):
+    try:
+        res = es_handler.search(index="domain_type")
+        domain_type = [i["_source"]["type"] for i in res["hits"]["hits"]]
+    except Exception :
+        domain_type = ['.id', '.com', '.xyz', '.net', '.org', '.co.id', '.web.id', '.my.id', '.biz.id', '.ac.id', '.sch.id', '.biz', '.co', '.tv', '.io', '.info']
     result = list()
     for i in datasets:
         if i['_index'] == 'domain':
@@ -52,13 +57,13 @@ res = es.search(index="crawler_config", body={"query": {"match_all": {}}})
 conf_es = [json.loads(i["_source"]["config_json"]) for i in res["hits"]["hits"]]
 
 ## Configure DOOMBOT
-config = {
+_config = {
     "force_dump" : False,
     "stack_send": False
 }
 
 for crawler_configuration in conf_es:
-    c = CE(json_config=crawler_configuration,force_headless=True,**config)
+    c = CE(json_config=crawler_configuration,force_headless=True,**_config)
     cfgs = c.crawler_configs
     result = list()
     config=c.scrape(cfgs)

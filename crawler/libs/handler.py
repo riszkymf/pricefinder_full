@@ -32,8 +32,9 @@ Product Crawler class inherit company details from Company Details class.
 It will generate crawlers which will be appended to Worker's tasks list"""
 
 
-DRIVER_PATH = {"chrome": get_path('chromedriver'),
-               "firefox": get_path('geckodriver')}
+CHROMEDRIVER_PATH = os.getenv("CHROMEDRIVER_PATH")
+if not CHROMEDRIVER_PATH:
+    CHROMEDRIVER_PATH = get_path('chromedriver')
 
 IS_REMOTE = os.getenv("REMOTE_DRIVER","0")
 REMOTE_HOST = os.getenv("REMOTE_HOST","localhost")
@@ -42,7 +43,7 @@ REMOTE_PORT = os.getenv("REMOTE_PORT","4444")
 class Worker(object):
 
     driverType = "chrome"
-    driverPath = DRIVER_PATH['chrome']
+    driverPath = CHROMEDRIVER_PATH
     driver = None
     is_headless = True
     task_ = list()

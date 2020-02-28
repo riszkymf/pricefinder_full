@@ -10,6 +10,9 @@ from os.path import isfile,isdir,join,abspath
 from datetime import datetime
 from crawler.settings import *
 from crawler import logging
+from pathlib import Path
+
+ROOT_PATH = Path(__file__).parent.parent.parent
 
 def create_dir(path):
     try:
@@ -59,8 +62,7 @@ def load_yaml(filename):
     return data
 
 def get_path(path):
-    cwd = os.getcwd()
-    new_path = os.path.join(cwd, path)
+    new_path = os.path.join(ROOT_PATH, path)
     new_path = os.path.abspath(new_path)
     return new_path
 

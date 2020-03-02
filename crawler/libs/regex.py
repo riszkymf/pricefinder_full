@@ -31,7 +31,6 @@ class RegexHandler(object):
             func = func_dict[self.method]
             query = self.query
             value = self.init_val
-            print("Init Value : ",value)
             result = func(value,**query)
             return result
         else:
@@ -45,13 +44,36 @@ class RegexHandler(object):
             "search": self.search,
             "find_group": self.search,
             "sub": self.sub,
-            "replace": self.sub
+            "replace": self.sub,
+            "match": self.match,
+            "index": self.match
         }
         self.aliases = aliases
-                
+
+    def match(self, value, **query):
+        re = self.re
+        regex = query['regex']
+        default = query.get("default_value",False)
+        match_index = query["match_index"]
+        try:
+            _result = re.finditer(str(regex), repr(value))
+            result = [ i.group() for i in list(_result)]
+            if match_index:
+                result_string = result[int(match_index)]
+            else:
+                result_string = " ".join(result)
+        except Exception as e:
+            print(str(e))
+            if default:
+                result_string = default
+            else:
+                result_string = value
+        return result_string
+
     def findall(self,value,**query):
         re = self.re
         regex = query['regex']
+        default = query.get("default_value",False)
         match_index = query['match_index']
         try:
             result=re.findall(str(regex),repr(value))
@@ -61,10 +83,14 @@ class RegexHandler(object):
                 result_string = " ".join(result)
         except Exception as e:
             print(str(e))
-            result_string = value
+            if default:
+                result_string = default
+            else:
+                result_string = value
         return result_string
     
     def search(self,value,**query):
+        default = query.get("default_value",False)
         re = self.re
         regex = query['regex']
         try:
@@ -78,11 +104,15 @@ class RegexHandler(object):
             result_string = result
         except Exception as e:
             print(str(e))
-            result_string=value
+            if default:
+                result_string = default
+            else:
+                result_string = value
         return result_string
             
     def sub(self,value,**query):
         re = self.re
+        default = query.get("default_value",False)
         regex = query['regex']
         repl = query.get('repl',query.get('replacement',query.get('replace',"")))
         try:
@@ -90,6 +120,9 @@ class RegexHandler(object):
             result_string = result
         except Exception as e:
             print(str(e))
-            result_string = value
+            if default:
+                result_string = default
+            else:
+                result_string = value
             
         return result_string

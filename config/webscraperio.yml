@@ -1,0 +1,63 @@
+- config:
+  - name: webscraper-io
+  - base_url: "https://webscraper.io"
+  - currency_used: "USD"
+- product:
+  - name: laptops
+  - endpoint: '/test-sites/e-commerce/allinone/computers/laptops'
+  - type: vm
+  - data_display: card
+  - content:
+      - pricing:
+          - spec_price:
+              - extractor:
+                  - xpath: //div[contains(@class,"test-site")]//div[@class="col-md-9"]//h4[contains(@class,"price")]
+              - postprocess:
+                  - extract_float_numbers:
+          - spec_name:
+              - extractor: 
+                  - xpath: //div[contains(@class,"test-site")]//div[@class="col-md-9"]//h4/a
+                  - attribute: title
+          - spec_clock:
+              - extractor: 
+                  - xpath: //div[contains(@class,"test-site")]//div[@class="col-md-9"]//p[@class="description"]
+              - postprocess:
+                  - raw_regex:
+                      - search: 
+                          - regex: ([\d.]+?)GHz
+                          - default_value: None
+          - dimension:
+              - extractor: 
+                  - xpath: //div[contains(@class,"test-site")]//div[@class="col-md-9"]//p[@class="description"]
+              - postprocess:
+                  - raw_regex:
+                      - search: 
+                          - regex: ([\d.]+?)"
+                          - default_value: None
+          - spec_storage:
+              - extractor: 
+                  - xpath: //div[contains(@class,"test-site")]//div[@class="col-md-9"]//p[@class="description"]
+              - postprocess:
+                  - raw_regex:
+                      - match: 
+                          - regex: ([\d]+?)[TG]?B
+                          - default_value: None
+                          - match_index: 1
+          - spec_ram:
+              - extractor: 
+                  - xpath: //div[contains(@class,"test-site")]//div[@class="col-md-9"]//p[@class="description"]
+              - postprocess:
+                  - raw_regex:
+                      - match: 
+                          - regex: ([\d]+?)[TG]?B
+                          - default_value: None
+                          - match_index: '0'
+          - reviews:
+              - extractor: 
+                  - xpath: //div[@class="ratings"]/p[1]
+              - postprocess:
+                  - extract_numbers:
+          - ratings:
+              - extractor: 
+                  - xpath: //div[@class="ratings"]/p[2]
+                  - attribute: data-rating

@@ -1,0 +1,95 @@
+hosting:
+  spec_price:
+    required: True
+  spec_storage:
+    required: True
+  spec_database:
+    required: True
+  spec_free_domain:
+    required: False
+  spec_hosting_domain:
+    required: False
+  spec_subdomain:
+    required: False
+  spec_ftp_user:
+    required: False
+  spec_control_panel:
+    required: False
+  spec_email_account:
+    required: False
+  spec_spam_filter:
+    required: False
+  nm_product:
+    required: True
+  nm_company:
+    required: True
+  currency_used:
+    required: True
+  date:
+    required: True
+    date_reference: True
+vm:
+  spec_price:
+    required: True
+  spec_vcpu:
+    required: True
+  spec_clock:
+    required: False
+  spec_os:
+    required: False
+  spec_ram:
+    required: True
+  spec_storage_volume:
+    required: False
+  spec_ssd_volume:
+    required: False
+  spec_snapshot_volume:
+    required: False
+  spec_template_volume:
+    required: False
+  spec_iso_volume:
+    required: False
+  spec_public_ip:
+    required: False
+  spec_backup_storage:
+    required: False
+  nm_product:
+    required: True
+  nm_company:
+    required: True
+  currency_used:
+    required: True
+  date:
+    required: True
+    date_reference: True
+domain:
+  nm_domain_type:
+    required: True
+  spec_register_price:
+    required: False
+  spec_transfer_price:
+    required: False
+  spec_renewal_price:
+    required: False
+  nm_product:
+    required: True
+  nm_company:
+    required: True
+  currency_used:
+    required: True
+  date:
+    required: True
+    date_reference: True
+domain_type:
+  type:
+    required: True
+additional_features:
+  _settings:
+    allow_custom_field: True
+  _parent_index:
+    required: True
+  _parent_id:
+    required: True
+  date:
+    required: True
+    date_reference: True

@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-
-=======
->>>>>>> e9fd29d26df657690c7260f9f167ec62218e22f3
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -75,6 +71,7 @@ target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+*.ipynb
 
 # pyenv
 .python-version

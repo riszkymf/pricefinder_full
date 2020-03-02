@@ -1,0 +1,40 @@
+- config:
+  - name: linode
+  - base_url: https://www.linode.com/
+  - currency_used: USD
+- product:
+  - name: cloud_server
+  - endpoint: pricing#all
+  - type: vm
+  - data_display: card
+  - skip_first_data: true
+  - content:
+    - pricing:
+      - spec_price:
+        - extractor:
+          - xpath: //*[@id="pricing-larger-plans"]//tr[*]/td[8]/strong
+        - postprocess:
+          - extract_numbers: null
+      - spec_ram:
+        - extractor:
+          - xpath: //*[@id="pricing-larger-plans"]//tr[*]/td[2]
+        - postprocess:
+          - extract_numbers: null
+      - spec_vcpu:
+        - extractor:
+          - xpath: //*[@id="pricing-larger-plans"]//tr[*]/td[3]
+      - spec_ssd_volume:
+        - extractor:
+          - xpath: //*[@id="pricing-larger-plans"]//tr[*]/td[4]
+        - postprocess:
+          - remove_strings: ' SSD'
+    - additional_features:
+      - transfer:
+        - extractor:
+          - xpath: //*[@id="pricing-larger-plans"]//tr[*]/td[5]
+      - network_in:
+        - extractor:
+          - xpath: //*[@id="pricing-larger-plans"]//tr[*]/td[6]
+      - network_out:
+        - extractor:
+          - xpath: //*[@id="pricing-larger-plans"]//tr[*]/td[7]

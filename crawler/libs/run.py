@@ -151,7 +151,6 @@ class CrawlerExecutor(object):
     def configure_crawler(self):
         status = {"sent": None,"scrape":None}
         conf = self._config
-        print(conf)
         cfg = flatten_dictionaries(conf[0]['config'])
         cfg['company_name'] = cfg.pop('name')
         configuration = list()
@@ -267,6 +266,7 @@ class CrawlerExecutor(object):
             result['company'] = _company_details
             result['data'].append(crawler.crawler_result())
             self.scrape_result = result
+            print(result)
             self.flattened_data.append(crawler.flatten_data_result())   
         return configs
 

@@ -1,19 +1,22 @@
 """
 Usage:
-  pricefinder <command> [<args>...]
+  prc <command> [<args>...]
+  prc -h | --help
 
-Run 'omnibus COMMAND --help' for more information on a command.
+Command :
+  scrape      Remove owned DNS or Records
+
+Run 'prc-crawler <command> --help' for more information on a command.
 """
 
 from inspect import getmembers, isclass
 from docopt import docopt, DocoptExit
-from crawler import __version__ as VERSION
 
 
 def main():
     """Main CLI entrypoint."""
-    import crawler.clis
-    options = docopt(__doc__, version=VERSION, options_first=True)
+    import clis
+    options = docopt(__doc__, version='0.0.1', options_first=True)
     command_name = ""
     args = ""
     command_class =""
@@ -25,17 +28,16 @@ def main():
         args = {}
 
     try:
-        module = getattr(crawler.clis, command_name)
-    
-        crawler.clis = getmembers(module, isclass)
-        command_class = [command[1] for command in crawler.clis
+        module = getattr(clis, command_name)
+        clis = getmembers(module, isclass)
+        command_class = [command[1] for command in clis
                    if command[0] != 'Base'][0]
     except AttributeError as e:
         print(e)
         raise DocoptExit()
-
     command = command_class(options, args)
     command.execute()
+    
 
 
 if __name__ == '__main__':

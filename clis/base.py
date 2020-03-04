@@ -1,6 +1,5 @@
 from docopt import docopt
 
-
 class Base(object):
     """Base class for the commands"""
 
@@ -15,5 +14,4 @@ class Base(object):
 
     def execute(self):
         """Execute the commands"""
-
         raise NotImplementedError

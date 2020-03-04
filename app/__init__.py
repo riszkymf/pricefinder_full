@@ -1,7 +1,5 @@
 import pymysql, logging, os
 
-from app.libs.logger import create_logger
-
 from datetime import datetime,date
 from elasticsearch import Elasticsearch
 
@@ -28,35 +26,6 @@ elif LOG_TYPE == "PRODUCTION":
 
 hosts = os.environ.get("ES_HOST","103.89.5.160:9200")
 es = Elasticsearch(hosts=hosts)
-
-database=os.environ.get("DB_NAME", os.getenv('DB_NAME'))
-user=os.environ.get("DB_USER", os.getenv('DB_USER'))
-password=os.environ.get("DB_PASSWORD", os.getenv('DB_PASSWORD'))
-port=os.environ.get("DB_PORT", os.getenv('DB_PORT'))
-host=os.environ.get("DB_HOST", os.getenv('DB_HOST'))
-
-
-class HBConnection(object):
-
-    def __init__(self):
-        self.MYSQL_DATABASE_HOST=host
-        self.MYSQL_DATABASE_PORT=port
-        self.MYSQL_DATABASE_USER=user
-        self.MYSQL_DATABASE_PASSWORD=password
-        self.MYSQL_DATABASE_DB=database
-        self.charset='utf8mb4'
-
-    def start_connection(self):
-        connection = pymysql.connect(
-            host= self.MYSQL_DATABASE_HOST,
-            user=self.MYSQL_DATABASE_USER,
-            password=self.MYSQL_DATABASE_PASSWORD,
-            db=self.MYSQL_DATABASE_DB,
-            port=int(self.MYSQL_DATABASE_PORT),
-            charset='utf8mb4',
-            cursorclass=pymysql.cursors.DictCursor)
-        self.connection = connection
-        return connection
 
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))

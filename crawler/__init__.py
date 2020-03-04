@@ -2,9 +2,20 @@ import os,logging,datetime
 
 from datetime import datetime,date
 
-from logger.loghandler import create_logger
+from elasticsearch import Elasticsearch
+from elasticsearch import helpers
 
 from selenium.webdriver.remote.remote_connection import LOGGER
+
+ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
+
+ES_INDEX_CONFIG_PATH = os.getenv("ES_INIT",os.path.join(ROOT_PATH,"es_index.yml"))
+if not ES_INDEX_CONFIG_PATH:
+    ES_INDEX_CONFIG_PATH = os.path.join(ROOT_PATH,"es_index.yml")
+CONFIG_PATH = os.getenv("CONF_PATH",os.path.join(ROOT_PATH,"crawler/config"))
+
+ES_HOST = os.getenv("ES_HANDLER","http://103.89.5.160:9200")
+es = Elasticsearch(ES_HOST)
 
 __version__ = '0.0.0'
 

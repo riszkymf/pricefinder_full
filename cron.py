@@ -12,9 +12,20 @@ ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 ES_INDEX_CONFIG_PATH = os.path.join(ROOT_PATH,"es_index.yml")
 CONFIG_PATH = os.path.join(ROOT_PATH,"crawler/config")
 
-ES_HOST = os.getenv("ES_HANDLER","http://103.89.5.160:9200")
+ES_HOST = os.getenv("ES_HOST","http://103.89.5.160:9200")
 
-es = Elasticsearch(ES_HOST)
+ES_USERNAME = os.getenv("ES_USERNAME","elastic")
+ES_PASSWORD = os.getenv("ES_PASSWORD","")
+es = Elasticsearch(ES_HOST,http_auth=(ES_USERNAME,ES_PASSWORD))
+
+try:
+    es.search(index="")
+except Exception as e:
+    print(str(e))
+    logging.error("Failure to communicate with ElasticSearch")
+    logging.error(str(e))
+    raise
+
 
 HEADLESS = os.getenv("HEADLESS",'0')
 try:

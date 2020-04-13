@@ -4,6 +4,7 @@ from .base import Base
 from termcolor import colored
 import crawler
 from crawler.libs.util import ROOT_PATH
+from elasticsearch import helpers
 
 def send_data(es_handler, datasets):
     try:
@@ -40,6 +41,7 @@ class Scrape(Base):
     -e CONFIGNAME             Use configuration on ESDB
     -d DUMPFILE               Dump Json Data to a file
     -s --send                 Send retrieved data to ESDB
+    -V --validate             Validate json config field first
 
     Commands:
      scrape                     Scrape Data
@@ -50,8 +52,6 @@ class Scrape(Base):
     def execute(self):
 
         print(self.args)
-
-
 
         config_exist = False
 
@@ -66,6 +66,7 @@ class Scrape(Base):
         else:
             config_exist = True
             for key,val in _init_conf.items():
+                print(key," : ",val)
                 os.environ[key] = val
         
         importlib.reload(crawler)
@@ -111,10 +112,10 @@ class Scrape(Base):
                     json_config.append(_tmp)
 
         elif self.args["-e"]:
-            res = es.search(index="crawler_config", body={"query": {"match_all": {}}})
-            res = res["hits"]["hits"]
+            res = helpers.scan(es,index="crawler_config")
+            res = list(res)
             json_config = [json.loads(i["_source"]["config_json"]) for i in res if i["_source"]["config_name"] in self.args["-e"]]
-
+        
         _config = {
             "force_dump" : False,
             "stack_send": False
@@ -122,8 +123,17 @@ class Scrape(Base):
         
 
         for configuration in json_config:
+            print(colored("\n\nInitializing Worker .....","green"))
             bot = CE(json_config=configuration, force_headless=self.args["--headless"])
+            print(colored("Configuring .....","green"))
+            if self.args['--validate'] and self.args['--send']:
+                print(colored("Validating .... ","yellow"))
+                check = bot.validate_config(es_init)
+                if not check:
+                    print(colored("Crawler Config does not contain required fields","yellow"))
+                    continue
             cfgs = bot.crawler_configs
+            print(colored("Scraping .....","green"))
             result = list()
             bot.scrape(cfgs)
             print(colored("==================================== RESULT ====================================","green"))

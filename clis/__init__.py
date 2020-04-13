@@ -1,2 +1,3 @@
 from .scrape import Scrape
-from .config import Config
+from .setup import Setup
+from .config import CrawlerConfig

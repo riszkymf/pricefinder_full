@@ -36,6 +36,7 @@ def main():
         print(e)
         raise DocoptExit()
     command = command_class(options, args)
+    print(args)
     command.execute()
     
 

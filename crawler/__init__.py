@@ -15,7 +15,9 @@ if not ES_INDEX_CONFIG_PATH:
 CONFIG_PATH = os.getenv("CONF_PATH",os.path.join(ROOT_PATH,"crawler/config"))
 
 ES_HOST = os.getenv("ES_HANDLER","http://103.89.5.160:9200")
-es = Elasticsearch(ES_HOST)
+ES_USERNAME = os.getenv("ES_USERNAME","elastic")
+ES_PASSWORD = os.getenv("ES_PASSWORD","")
+es = Elasticsearch(ES_HOST,http_auth=(ES_USERNAME,ES_PASSWORD))
 
 __version__ = '0.0.0'
 

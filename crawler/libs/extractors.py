@@ -237,7 +237,15 @@ class PostProcess(object):
         extractor = ExtractorPostProcess[type_]
         if type_ == 'math':
             kkwargs = self.generate_math_args(**kwargs)
-        kkwargs = self.parse_arguments(extractor, **kwargs)
+            kkwargs = self.parse_arguments(extractor, **kwargs)
+        else:
+            if isinstance(kwargs[type_],list):
+                kwargs[type_] = flatten_dictionaries(kwargs[type_])
+                kkwargs = self.parse_dict_arguments(extractor, **kwargs)
+            elif isinstance(kwargs[type_],dict):
+                kkwargs = self.parse_dict_arguments(extractor,**kwargs)
+            else:
+                kkwargs = self.parse_arguments(extractor,**kwargs)
         self.extractor = extractor
         self.kkwargs = kkwargs
 
@@ -254,6 +262,21 @@ class PostProcess(object):
                 extractor_args[k1] = kwargs.pop(k2)
         return extractor_args
 
+    def parse_dict_arguments(self, extractor=None, **kwargs):
+        func = getattr(extractor, '__init__')
+        argspecs = inspect.getargspec(func)
+        args = argspecs.args
+        args.remove('self')
+        extractor_args = {'value': kwargs.pop('value')}
+        args.remove('value')
+        keys = list(kwargs.keys())
+        if args:
+            for k1, k2 in zip(args, keys):
+                query = kwargs.pop(k2)
+                for key,val in query.items():
+                    extractor_args[key] = val
+        return extractor_args
+
     def generate_math_args(self,**kwargs):
         d = {'query': kwargs['math'], 'value': kwargs['value']}
         return d
@@ -262,7 +285,15 @@ class RegexExtractBefore(PostProcess):
 
     def __init__(self, value, character):
         regex = '(.*)\{}'.format(character)
-        result = re.search(regex, repr(value))
+        try:
+            result = re.search(regex, repr(value))
+        except Exception as e:
+            try:
+                value = value.split(character)
+                self.result = value[0]
+                return
+            except Exception as e:
+                print(str(e))
         if not result:
             self.result = value
         else:
@@ -270,12 +301,45 @@ class RegexExtractBefore(PostProcess):
             result = result.replace("'","").replace('"','')
             self.result = result
 
+class ExtractLine(PostProcess):
+    
+    def __init__(self, value, line):
+        try:
+            splitted_text = value.split("\n")
+            result = splitted_text[int(line)]
+        except Exception as e:
+            result = value
+            self.result = value
+            return
+        else:
+            result = result.replace("'","").replace('"','')
+            self.result = result
+
+class SplitSpaces(PostProcess):
+    
+    def __init__(self, value, index):
+        try:
+            _splitted_text = value.split(" ")
+            splitted_text = [i for i in _splitted_text if i]
+            result = splitted_text[int(index)]
+        except Exception as e:
+            result = value
+            self.result = value
+            return
+        else:
+            result = result.replace("'","").replace('"','')
+            self.result = result
 
 class RegexExtractAfter(PostProcess):
     
     def __init__(self, value, character):
-        regex = "\{}(.*)".format(character)
-        result = re.search(regex, repr(value))
+        try:
+            regex = "\{}(.*)".format(character)
+            result = re.search(regex, repr(value))
+        except Exception as e:
+            value = value.split(character)
+            self.result = value[-1]
+            return
         if not result:
             result = value
             self.result = value
@@ -353,6 +417,13 @@ class InsertStringBefore(PostProcess):
         tmp = "{} ".format(string)+str(value)
         self.result = tmp
 
+class SplitsBy(PostProcess):
+    def __init__(self,value,string,index):
+        tmp = value.split(str(string))
+        try:
+            self.result = tmp[index]
+        except IndexError:
+            self.result = "None"
 
 class MathProcess(PostProcess):
     OPERATIONS = {
@@ -406,7 +477,10 @@ ExtractorPostProcess = {
     'convert_currency': ConvertCurrency,
     'remove_strings': RemoveStrings,
     'insert_string_after': InsertStringAfter,
-    'insert_string_before': InsertStringBefore
+    'insert_string_before': InsertStringBefore,
+    'extract_line': ExtractLine,
+    'split_spaces': SplitSpaces,
+    'splits_by': SplitsBy
 }
 
 
@@ -433,6 +507,7 @@ class ActionsHandler(object):
             extractor = data['extractor']
             pass
 
+
     @property
     def act(self):
         return self.action
@@ -448,6 +523,8 @@ class ActionsHandler(object):
         for i in self.action_chains:
             i.run()
             self.action.reset_actions()
+            self.action = ActionChains(self.driver)
+
 
     def generate_actions(self, data):
         action_chains = list()
@@ -662,6 +739,8 @@ class Actions(ActionsHandler):
                 logging.error ("Loading took too much time!")
             to_element = driver.find_element(type_, value)
         return to_element
+
+
 
     def _move_element_to_center(self, element):
         driver = self.driver

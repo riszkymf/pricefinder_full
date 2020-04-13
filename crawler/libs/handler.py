@@ -52,11 +52,12 @@ class Worker(object):
         task_ = list()
         options = Options()
         if headless:
-            options.add_argument("--headless")
+            #options.add_argument("--headless")
             options.add_argument("--no-sandbox")
             options.add_argument("--disable-dev-shm-usage")
             options.add_argument("--user-agent='Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'")        
         if IS_REMOTE == "1":
+            print("========================= Using Remote WebDriver ===============================")
             self._remote_webdriver = True
             host = "http://{}:{}/wd/hub".format(REMOTE_HOST,REMOTE_PORT)
             self.driver = webdriver.Remote(host,DesiredCapabilities.CHROME)
@@ -337,7 +338,6 @@ class ProductCrawler(CompanyDetails):
 #   Obtain data for every action in action chains. 
     def run(self):
         count = 0
-        self.check_html_changes()
         logging.debug(self.get_url())
         if self.action_chains:
             self.obtain_value()
@@ -628,7 +628,9 @@ class ESDataSend(object):
                             return list()
                     else:
                         __datatmp[key] = data.get(key,"None")
-            _id = json.dumps(__datatmp)
+            _tmp = __datatmp.copy()
+            _tmp.pop('date',None)
+            _id = json.dumps(_tmp)
             _id = generate_id(_id)
             __datatmp['_id'] = _id
             result.append(__datatmp)
@@ -636,7 +638,10 @@ class ESDataSend(object):
                 parent_id = _id
                 __datatmp_add = {"_parent_id": parent_id, "_parent_index": product_type, "_index": "additional_features"}
                 __datatmp_add = {**__datatmp_add, **data['additional_features']}
-                _id = json.dumps(__datatmp_add)
+                _tmp = dict()
+                _tmp = __datatmp_add.copy()
+                _tmp.pop('date',None)
+                _id = json.dumps(_tmp)
                 _id = generate_id(_id)
                 __datatmp_add["_id"] = _id
                 result.append(__datatmp_add)

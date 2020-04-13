@@ -139,6 +139,7 @@ class CrawlerExecutor(object):
         else:
             self._config =  json_config
         self.configure_crawler()
+        self.flattened_data = list()
         
     def load_crawler_configuration(self,path):
         files = load_config(path)
@@ -170,6 +171,25 @@ class CrawlerExecutor(object):
         return self._handler
        
     
+    def validate_config(self,es_config):
+        configs = self._handler
+        for i in configs:
+            type_ = i['config'].type_
+            extractors = i["config"].content.get("pricing",list())
+            if not extractors:
+                continue
+            keys = [i.value_name for i in extractors]
+            product = es_config[type_]
+            required_keys = [key for key,val in product.items() if val['required'] and 'spec' in key]
+            check = set(required_keys).issubset(set(keys))
+            if not check:
+                missing_fields = set(required_keys) - set(keys)
+                print("product {} is missing {}".format(type_,list(missing_fields)))
+                return False
+
+        return True
+
+
     @crawler_configs.setter
     def crawler_configs(self,value):
         index = value[1]
@@ -249,6 +269,8 @@ class CrawlerExecutor(object):
             except Exception as e:
                 logging.error(str(e))
                 config['status']['scrape'] = {"status" : False, "message": str(e)}
+                crawler.driver.quit()
+                return configs
             else:
                 config['status']['scrape'] = {"status": True, "message": "Success"}
                 normalized_data = crawler.normalize(scraped_data)
@@ -266,7 +288,6 @@ class CrawlerExecutor(object):
             result['company'] = _company_details
             result['data'].append(crawler.crawler_result())
             self.scrape_result = result
-            print(result)
             self.flattened_data.append(crawler.flatten_data_result())   
         return configs
 

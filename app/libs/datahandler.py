@@ -1,7 +1,15 @@
 import datetime
-import json
+import json,yaml
 import hashlib
+import os
+from pathlib import Path
 
+ES_PATH = os.getenv("ES_PATH","es_index.yml")
+ROOT_PATH = Path(__file__).parent.parent.parent
+ES_PATH = os.path.join(ROOT_PATH,ES_PATH)
+
+with open(ES_PATH,"r") as f:
+    ES_CONF = yaml.safe_load(f.read())
 
 
 time_format = "%Y-%m-%d"
@@ -61,7 +69,7 @@ def get_removed_elements(duplicate_elements):
     return delete_elements
 
 def sanitize_data(batch_data):
-    normalized_data = [normalize(i) for i in sample_batch_0]
+    normalized_data = [normalize(i) for i in batch_data]
     duplicate_data = get_duplicate(batch_data)
     removed_index = get_removed_elements(duplicate_data)
     removed_items = [normalized_data[i] for i in removed_index]
@@ -79,3 +87,13 @@ def get_active_user(datasets):
     nonactive_user = list(set(nonactive_user))
     active_user = [i for i in datasets if i['account_id'] not in nonactive_user ]
     return active_user
+
+def get_date_reference(index,es_config=ES_CONF):
+    index_conf = es_config[index]
+    for key,val in index_conf.items():
+        check_1 = 'date_reference' in list(val.keys())
+        check_2 = val.get("date_reference",False)
+        check_val = check_1 and check_2
+        if check_val:
+            return key
+    return "date"

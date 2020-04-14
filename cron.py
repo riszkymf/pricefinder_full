@@ -12,7 +12,7 @@ ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 ES_INDEX_CONFIG_PATH = os.path.join(ROOT_PATH,"es_index.yml")
 CONFIG_PATH = os.path.join(ROOT_PATH,"crawler/config")
 
-ES_HOST = os.getenv("ES_HOST","http://103.89.5.160:9200")
+ES_HOST = os.getenv("ES_HOST","http://103.89.4.236:9200")
 
 ES_USERNAME = os.getenv("ES_USERNAME","elastic")
 ES_PASSWORD = os.getenv("ES_PASSWORD","")
@@ -66,6 +66,8 @@ with open(ES_INDEX_CONFIG_PATH,"r+") as f:
 res = es.search(index="crawler_config", body={"query": {"match_all": {}}})
 
 conf_es = [json.loads(i["_source"]["config_json"]) for i in res["hits"]["hits"]]
+conf_full = [i for i in res["hits"]["hits"]]
+
 
 ## Configure DOOMBOT
 _config = {
@@ -73,15 +75,24 @@ _config = {
     "stack_send": False
 }
 
-for crawler_configuration in conf_es:
-    c = CE(json_config=crawler_configuration,force_headless=True,**_config)
-    cfgs = c.crawler_configs
-    result = list()
-    config=c.scrape(cfgs)
-    esdata = ESDataSend(es,es_init_indices,c.flattened_data)
-    tmp = list()
-    for i in esdata.rawdata:
-        tmp.extend(esdata.compile_chunk_data(i))
-    result = esdata.normalize(tmp)
-    send_result = send_data(es,result)
-    logging.debug(send_result)
+for crawler_configuration,conf in zip(conf_es,conf_full):
+    report = {"status": "True"}
+    try:
+        c = CE(json_config=crawler_configuration,force_headless=True,**_config)
+        cfgs = c.crawler_configs
+        result = list()
+        config=c.scrape(cfgs)
+        esdata = ESDataSend(es,es_init_indices,c.flattened_data)
+        tmp = list()
+        for i in esdata.rawdata:
+            tmp.extend(esdata.compile_chunk_data(i))
+        result = esdata.normalize(tmp)
+        send_result = send_data(es,result)
+        logging.debug(send_result)
+    except Exception as e:
+        logging.error(str(e))
+        report["status"] = "False"
+    _id = conf["_id"]
+    conf["_source"].update(report)
+    es.index(index="crawler_config",body=conf["_source"],id=_id)
+        

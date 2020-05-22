@@ -2,7 +2,9 @@ FROM centos:7
 MAINTAINER Riszky MF "riszky@biznetgio.com"
 
 RUN yum install -y yum-utils epel-release && \
-    yum install -y gcc python36 python36-pip python36-devel postgresql-devel openssl-devel wget
+    yum install -y gcc python36 python36-pip python36-devel postgresql-devel openssl-devel wget &&\
+    yum install -y oathtool gnupg2 &&\
+    yum install -y openvpn
 
 ENV TZ Asia/Jakarta
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone

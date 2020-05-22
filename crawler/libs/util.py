@@ -216,3 +216,15 @@ def read_file(filename):
         print(str(e))
         data = None
     return data
+
+def dump_to_tmp(filename,data):
+    tmp_folder = os.path.join(ROOT_PATH,"tmp")
+    filepath = os.path.join(tmp_folder,filename)
+    try:
+        with open(filepath,"w+") as f:
+            f.write(json.dumps(data))
+    except Exception as e:
+        logging.ERROR(str(e))
+        return False
+    else:
+        return True

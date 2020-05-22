@@ -1,9 +1,11 @@
+import json
+
 from elasticsearch import Elasticsearch
 from elasticsearch import helpers
 
 from crawler.libs.handler import ESDataSend,generate_id
 from crawler.libs.util import dump_to_tmp
-
+from crawler import logging
 
 class VPN_ES(object):
 
@@ -33,7 +35,7 @@ class VPN_ES(object):
 
     def dump_config_tmp(self,configs):
         for config in configs:
-            filename = "cfg_{}_{}.json".format(config['_id'],config['_source']['config_name'])
+            filename = "cfg_{}-{}.json".format(config['_id'],config['_source']['config_name'])
             dump = dump_to_tmp(filename,json.loads(config['_source']['config_json']))
 
     def pull_configs(self):

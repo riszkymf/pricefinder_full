@@ -36,3 +36,24 @@ def search_data(es,index,search_query=None):
 def scan_data(es,index,search_query=None):
     res = helpers.scan(es,index=index,query=search_query)
     return list(res)
+
+def __configure_elasticsearch(es,conf):
+    keys = list(conf.keys())
+    for key in keys:
+        try:
+            res = es.indices.create(index=key, ignore=[400,404])
+            logging.debug(res)
+        except Exception as e:
+            logging.error(str(e))
+        _settings = conf[key].get('_settings',dict())
+        _alias = _settings.get('aliases',list())
+        if _settings and _alias:
+            for i in _alias:
+                try:
+                    res = es.indices.put_alias(index=key,name=i)
+                    logging.debug(res)
+                except Exception as e:
+                    logging.error(str(e))
+    
+
+

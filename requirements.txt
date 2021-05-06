@@ -6,7 +6,7 @@ Flask==1.0.2
 requests==2.18.4
 redis==3.3.11
 jmespath==0.9.3
-Flask_Cors==3.0.7
+Flask_Cors==3.0.9
 python_dateutil==2.8.1
 python-dotenv==0.11.0
 elasticsearch==7.5.1
